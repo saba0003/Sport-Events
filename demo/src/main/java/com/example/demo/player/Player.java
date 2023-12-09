@@ -5,6 +5,7 @@ import com.example.demo.util.FullName;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "players")
 public class Player {
 
     @Id

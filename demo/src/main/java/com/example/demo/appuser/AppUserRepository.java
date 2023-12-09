@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface AppUserRepository extends JpaRepository<ScoreRecordingManager, Long> {
-    Optional<ScoreRecordingManager> findByUsername(String username);
+public interface AppUserRepository extends JpaRepository<Manager, Long> {
+    Optional<Manager> findByUsername(String username);
 }

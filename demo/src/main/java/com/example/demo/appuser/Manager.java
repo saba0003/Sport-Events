@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-public class ScoreRecordingManager implements UserDetails {
+public class Manager implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,10 @@ public class ScoreRecordingManager implements UserDetails {
     private Boolean locked;
     private Boolean enabled;
 
-    public ScoreRecordingManager() {
+    public Manager() {
     }
 
-    public ScoreRecordingManager(String username, String password, AppUserRole appUserRole, Boolean locked, Boolean enabled) {
+    public Manager(String username, String password, AppUserRole appUserRole, Boolean locked, Boolean enabled) {
         this.username = username;
         this.password = password;
         this.appUserRole = appUserRole;
