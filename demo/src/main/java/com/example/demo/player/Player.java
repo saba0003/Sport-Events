@@ -15,7 +15,7 @@ public class Player {
     private String lastName;
     @Transient
     private FullName fullName;
-    private Integer number;
+    private Integer jerseyNumber;
     @ManyToOne(optional = true)
     private Team team;
 
@@ -27,11 +27,11 @@ public class Player {
         this.lastName = lastName;
     }
 
-    public Player(String firstName, String lastName, Team team, Integer number) {
+    public Player(String firstName, String lastName, Team team, Integer jerseyNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.team = team;
-        this.number = number;
+        this.jerseyNumber = jerseyNumber;
     }
 
     public Long getId() {
@@ -77,12 +77,12 @@ public class Player {
         this.team = team;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getJerseyNumber() {
+        return jerseyNumber;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setJerseyNumber(Integer jerseyNumber) {
+        this.jerseyNumber = jerseyNumber;
     }
 
     @Override
