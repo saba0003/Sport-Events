@@ -39,7 +39,7 @@ public class TeamService {
             logger.error("Invalid name!");
             throw new IllegalArgumentException("Invalid name!");
         }
-        Team team = teamRepository.findByTeamName(name);
+        Team team = teamRepository.findByName(name);
         if (team == null) {
             logger.info(String.format("Team with name %s doesn't exist!", name));
             throw new IllegalArgumentException("Wrong name!");
@@ -47,37 +47,37 @@ public class TeamService {
         return team;
     }
 
-    public List<Team> getTeamsByNumberOfPlayers(Integer numOfPlayers) {
-        if (numOfPlayers == null) {
-            logger.error("Invalid number!");
-            throw new IllegalArgumentException("Invalid number!");
-        }
-        if (numOfPlayers < 0) {
-            logger.error("Player number can't be negative!");
-            throw new IllegalArgumentException("Invalid number!");
-        }
-        return teamRepository.findByNumberOfPlayers(numOfPlayers);
-    }
+//    public List<Team> getTeamsByNumberOfPlayers(Integer numOfPlayers) {
+//        if (numOfPlayers == null) {
+//            logger.error("Invalid number!");
+//            throw new IllegalArgumentException("Invalid number!");
+//        }
+//        if (numOfPlayers < 0) {
+//            logger.error("Player number can't be negative!");
+//            throw new IllegalArgumentException("Invalid number!");
+//        }
+//        return teamRepository.findByNumberOfPlayers(numOfPlayers);
+//    }
 
     public List<Team> getTeams() {
         return teamRepository.findAll();
     }
 
     public void addNewTeam(Team team) {
-        if (team == null) {
-            logger.error("Invalid team!");
-            throw new IllegalArgumentException("Invalid team!");
-        }
-        if (teamRepository.existsById(team.getId())) {
-            logger.error("Team with this ID already exists!");
-            System.out.println("Do you want to overwrite the existing team? y/n");
-            Scanner sc = new Scanner(System.in);
-            String input = sc.nextLine().toLowerCase();
-            sc.close();
-            if (input.equals("y"))
-                updateTeam(team.getId(), team.getName(), team.getPlayers());
-            return;
-        }
+//        if (team == null) {
+//            logger.error("Invalid team!");
+//            throw new IllegalArgumentException("Invalid team!");
+//        }
+//        if (teamRepository.existsById(team.getId())) {
+//            logger.error("Team with this ID already exists!");
+//            System.out.println("Do you want to overwrite the existing team? y/n");
+//            Scanner sc = new Scanner(System.in);
+//            String input = sc.nextLine().toLowerCase();
+//            sc.close();
+//            if (input.equals("y"))
+//                updateTeam(team.getId(), team.getName(), team.getPlayers());
+//            return;
+//        }
         teamRepository.save(team);
         logger.info("Team successfully added!");
     }

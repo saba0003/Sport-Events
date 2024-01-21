@@ -22,17 +22,22 @@ public class TeamController {
         return teamService.getTeams();
     }
 
+    @GetMapping(path = "{teamId}")
+    public Team getSpecificTeam(@PathVariable Long teamId) {
+        return teamService.getTeamById(teamId);
+    }
+
     @PostMapping
     public void registerNewTeam(@RequestBody Team team) {
         teamService.addNewTeam(team);
     }
 
-    @DeleteMapping(path = {"teamId"})
+    @DeleteMapping(path = "{teamId}")
     public void deleteTeam(@PathVariable Long teamId) {
         teamService.deleteTeam(teamId);
     }
 
-    @PutMapping(path = {"teamId"})
+    @PutMapping(path = "{teamId}")
     public void updateTeam(@PathVariable Long teamId,
                            @RequestParam(required = false) String name,
                            @RequestParam(required = false) List<Player> players) {

@@ -10,10 +10,11 @@ import java.util.List;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     List<Player> findByFirstName(String firstName);
     List<Player> findByLastName(String lastName);
-    List<Player> findByFullName(String fullName);
+//    List<Player> findByFullName(String fullName);
     List<Player> findByTeam(Team team);
-    List<Player> findByTeamName(String TeamName);
-    List<Player> findByNumber(Integer number);
-    Player findByTeamAndNumber(Team team, Integer number);
-    Player findByTeamNameAndNumber(String teamName, Integer number);
+    List<Player> findByTeamName(String name);
+    List<Player> findByTeamCity(String city);
+    List<Player> findByJerseyNumber(Integer jerseyNumber);
+    Player findByTeamAndJerseyNumber(Team team, Integer jerseyNumber);
+    Player findByTeamNameAndJerseyNumber(String teamName, Integer jerseyNumber);
 }

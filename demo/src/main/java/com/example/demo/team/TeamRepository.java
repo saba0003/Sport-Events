@@ -7,6 +7,6 @@ import java.util.List;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
-    Team findByTeamName(String name);
-    List<Team> findByNumberOfPlayers(int numberOfPlayers);
+    Team findByName(String name);
+//    List<Team> findByNumberOfPlayers(int numberOfPlayers);
 }

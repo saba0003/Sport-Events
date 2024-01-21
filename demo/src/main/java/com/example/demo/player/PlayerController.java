@@ -22,21 +22,27 @@ public class PlayerController {
         return playerService.getPlayers();
     }
 
+    @GetMapping(path = "{playerId}")
+    public Player getSpecificPlayer(@PathVariable Long playerId) {
+        return playerService.getPlayerById(playerId);
+    }
+
     @PostMapping
     public void registerNewPlayer(@RequestBody Player player) {
         playerService.addNewPlayer(player);
     }
 
-    @DeleteMapping(path = {"playerId"})
+    @DeleteMapping(path = "{playerId}")
     public void deletePlayer(@PathVariable Long playerId) {
         playerService.deletePlayer(playerId);
     }
 
-    @PutMapping(path = {"playerId"})
+    @PutMapping(path = "{playerId}")
     public void updatePlayer(@PathVariable Long playerId,
                              @RequestParam(required = false) String firstName,
                              @RequestParam(required = false) String lastname,
-                             @RequestParam(required = false) Team team) {
-        playerService.updatePlayer(playerId, firstName, lastname, team);
+                             @RequestParam(required = false) Team team,
+                             @RequestParam(required = false) Integer jerseyNumber) {
+        playerService.updatePlayer(playerId, firstName, lastname, team, jerseyNumber);
     }
 }
