@@ -40,7 +40,8 @@ public class TeamController {
     @PutMapping(path = "{teamId}")
     public void updateTeam(@PathVariable Long teamId,
                            @RequestParam(required = false) String name,
+                           @RequestParam(required = false) String city,
                            @RequestParam(required = false) List<Player> players) {
-        teamService.updateTeam(teamId, name, players);
+        teamService.updateTeam(teamId, name, city, players);
     }
 }

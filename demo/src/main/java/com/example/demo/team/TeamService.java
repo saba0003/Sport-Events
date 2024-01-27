@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Scanner;
 
 @Service
 public class TeamService {
@@ -47,56 +46,79 @@ public class TeamService {
         return team;
     }
 
-//    public List<Team> getTeamsByNumberOfPlayers(Integer numOfPlayers) {
-//        if (numOfPlayers == null) {
-//            logger.error("Invalid number!");
-//            throw new IllegalArgumentException("Invalid number!");
-//        }
-//        if (numOfPlayers < 0) {
-//            logger.error("Player number can't be negative!");
-//            throw new IllegalArgumentException("Invalid number!");
-//        }
-//        return teamRepository.findByNumberOfPlayers(numOfPlayers);
-//    }
+    public List<Team> getTeamByCity(String city) {
+        if (city == null) {
+            logger.error("Invalid city!");
+            throw new IllegalArgumentException("Invalid city!");
+        }
+        List<Team> teams = teamRepository.findByCity(city);
+        if (teams == null) {
+            logger.info(String.format("There is no team in %s!", city));
+            throw new IllegalArgumentException("Wrong city!");
+        }
+        return teams;
+    }
+
+    public List<Team> getTeamsByNumberOfPlayers(Integer numOfPlayers) {
+        if (numOfPlayers == null) {
+            logger.error("Invalid number!");
+            throw new IllegalArgumentException("Invalid number!");
+        }
+        if (numOfPlayers < 0) {
+            logger.error("Player number can't be negative!");
+            throw new IllegalArgumentException("Invalid number!");
+        }
+        if (teamRepository.findByNumberOfPlayers(numOfPlayers).isEmpty()) {
+            logger.info("Team with the given number of players doesn't exist");
+            throw new IllegalArgumentException("Wrong number!");
+        }
+        return teamRepository.findByNumberOfPlayers(numOfPlayers);
+    }
 
     public List<Team> getTeams() {
         return teamRepository.findAll();
     }
 
     public void addNewTeam(Team team) {
-//        if (team == null) {
-//            logger.error("Invalid team!");
-//            throw new IllegalArgumentException("Invalid team!");
-//        }
-//        if (teamRepository.existsById(team.getId())) {
-//            logger.error("Team with this ID already exists!");
-//            System.out.println("Do you want to overwrite the existing team? y/n");
-//            Scanner sc = new Scanner(System.in);
-//            String input = sc.nextLine().toLowerCase();
-//            sc.close();
-//            if (input.equals("y"))
-//                updateTeam(team.getId(), team.getName(), team.getPlayers());
-//            return;
-//        }
+        if (team == null) {
+            logger.error("Invalid team!");
+            throw new IllegalArgumentException("Invalid team!");
+        }
+        if (teamRepository.existsById(team.getId())) {
+            logger.error("Team with this ID already exists!");
+            return;
+        }
         teamRepository.save(team);
         logger.info("Team successfully added!");
     }
 
     public void deleteTeam(Long teamId) {
-        // Maybe warn manager before deleting a team
         getTeamById(teamId);
         teamRepository.deleteById(teamId);
         logger.info("Team deleted");
     }
 
-    @Transactional // jakarta or spring package?
-    public void updateTeam(Long teamId, String name, List<Player> players) {
+    @Transactional
+    public void updateTeam(Long teamId, String name, String city, List<Player> players) {
         Team team = getTeamById(teamId);
-        // TODO: Should add logic for exceptions
-        if (name != null && name.length() > 0 && !team.getName().equals(name))
+
+        if (name == null || name.trim().isEmpty()) {
+            logger.error("Invalid name!");
+            throw new IllegalArgumentException("Name can't be null or empty!");
+        }
+        if (!team.getName().equals(name))
             team.setName(name);
-        if (players != null)
+
+        if (city == null || city.trim().isEmpty()) {
+            logger.error("Invalid city!");
+            throw new IllegalArgumentException("City can't be null or empty!");
+        }
+        if (!team.getCity().equals(city))
+            team.setCity(city);
+
+        if (!team.getPlayers().equals(players))
             team.setPlayers(players);
+
         logger.info("Team successfully updated!");
     }
 }
