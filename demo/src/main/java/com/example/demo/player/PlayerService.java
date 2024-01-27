@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Scanner;
-
-import static com.example.demo.util.ExceptionHandler.*;
+import java.util.Objects;
 
 @Service
 public class PlayerService {
@@ -192,18 +190,39 @@ public class PlayerService {
         logger.info("Player deleted");
     }
 
-    @Transactional // jakarta or spring package?
-    public void updatePlayer(Long playerId, String firstName, String lastName, Team team, Integer jerseyNumber) {
+    @Transactional
+    public Player updatePlayer(Long playerId, String firstName, String lastName, Team team, Integer jerseyNumber) {
         Player player = getPlayerById(playerId);
-        // TODO: Should add logic for exceptions
-        if (firstName != null && firstName.length() > 0 && !player.getFirstName().equals(firstName))
+
+        if (firstName == null || firstName.trim().isEmpty()) {
+            logger.error("Invalid firstname!");
+            throw new IllegalArgumentException("Firstname can't be null or empty!");
+        }
+        if (!player.getFirstName().equals(firstName))
             player.setFirstName(firstName);
-        if (lastName != null && lastName.length() > 0 && !player.getLastName().equals(lastName))
+
+        if (lastName == null || lastName.trim().isEmpty()) {
+            logger.error("Invalid lastname!");
+            throw new IllegalArgumentException("Lastname can't be null or empty!");
+        }
+        if (!player.getLastName().equals(lastName))
             player.setLastName(lastName);
-        if (team != null && !team.equals(player.getTeam()))
+
+        if (team == null) {
+            logger.error("Invalid team!");
+            throw new IllegalArgumentException("Team can't be null!");
+        }
+        if (!player.getTeam().equals(team))
             player.setTeam(team);
-        if (jerseyNumber != null && !jerseyNumber.equals(player.getJerseyNumber()))
+
+        if (jerseyNumber == null || jerseyNumber < 1) {
+            logger.error("Invalid jersey number!");
+            throw new IllegalArgumentException("Jersey number can't be null or below zero!");
+        }
+        if (!Objects.equals(player.getJerseyNumber(), jerseyNumber))
             player.setJerseyNumber(jerseyNumber);
+
         logger.info("Player successfully updated!");
+        return player;
     }
 }

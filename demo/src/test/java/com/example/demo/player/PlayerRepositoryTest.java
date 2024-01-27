@@ -12,7 +12,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-
 @DataJpaTest
 public class PlayerRepositoryTest {
 
@@ -43,7 +42,7 @@ public class PlayerRepositoryTest {
     @Test
     void tryingToInitializePlayerWithJerseyNumberBeingNullTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         // When & Then
         assertThatThrownBy(() -> new Player("Khvicha", "Kvarackhelia", napoli, null)).isInstanceOf(IllegalArgumentException.class).hasMessage("When in team, jersey number can't be null!");
     }
@@ -51,7 +50,7 @@ public class PlayerRepositoryTest {
     @Test
     void tryingToInitializePlayerWithJerseyNumberBeingBelowOrEqualToZeroTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         // When & Then
         assertThatThrownBy(() -> new Player("Khvicha", "Kvarackhelia", napoli, 0)).isInstanceOf(IllegalArgumentException.class).hasMessage("Player numbering begins from 1 upwards!");
         assertThatThrownBy(() -> new Player("Khvicha", "Kvarackhelia", napoli, -3)).isInstanceOf(IllegalArgumentException.class).hasMessage("Player numbering begins from 1 upwards!");
@@ -179,7 +178,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamBeingNullTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -196,7 +195,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamWithIncorrectValueTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Team barca = new Team("Barcelona FC", "Barcelona");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
@@ -215,7 +214,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -233,7 +232,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamNameBeingNullTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -250,7 +249,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamNameWithIncorrectValueTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Team barca = new Team("Barcelona FC", "Barcelona");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
@@ -269,7 +268,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamNameTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -287,7 +286,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamCityBeingNullTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -304,7 +303,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamCityWithIncorrectValueTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Team barca = new Team("Barcelona FC", "Barcelona");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
@@ -323,7 +322,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamCityTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -331,7 +330,7 @@ public class PlayerRepositoryTest {
         teamRepo.save(napoli);
 
         // When
-        List<Player> players = playerRepo.findByTeamCity("Italy");
+        List<Player> players = playerRepo.findByTeamCity("Naples");
 
         // Then
         assertThat(players.isEmpty()).isFalse();
@@ -341,7 +340,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByJerseyNumberBeingNullTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -358,7 +357,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByJerseyNumberWithIncorrectValueTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -375,7 +374,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByJerseyNumberTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -393,7 +392,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamAndJerseyNumberWithEitherAttributeBeingNullTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player1 = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         Player player2 = new Player("Victor", "Osimhen", napoli, 9);
         Player player3 = new Player("Matteo", "Politano", napoli, 21);
@@ -418,7 +417,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamAndJerseyNumberWithEitherAttributeBeingIncorrectTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Team barca = new Team("Barcelona FC", "Barcelona");
         Team real = new Team("Real Madrid", "Madrid");
         Player player1 = new Player("Khvicha", "Kvarackhelia", napoli, 77);
@@ -447,7 +446,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamAndJerseyNumberTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player1 = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         Player player2 = new Player("Victor", "Osimhen", napoli, 9);
         Player player3 = new Player("Matteo", "Politano", napoli, 21);
@@ -470,7 +469,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamNameAndJerseyNumberWithEitherAttributeBeingNullTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player1 = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         Player player2 = new Player("Victor", "Osimhen", napoli, 9);
         Player player3 = new Player("Matteo", "Politano", napoli, 21);
@@ -495,7 +494,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamNameAndJerseyNumberWithEitherAttributeBeingIncorrectTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Team barca = new Team("Barcelona FC", "Barcelona");
         Team real = new Team("Real Madrid", "Madrid");
         Player player1 = new Player("Khvicha", "Kvarackhelia", napoli, 77);
@@ -524,7 +523,7 @@ public class PlayerRepositoryTest {
     @Test
     void findByTeamNameAndJerseyNumberTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player1 = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         Player player2 = new Player("Victor", "Osimhen", napoli, 9);
         Player player3 = new Player("Matteo", "Politano", napoli, 21);

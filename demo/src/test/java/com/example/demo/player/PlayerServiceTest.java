@@ -1,7 +1,6 @@
 package com.example.demo.player;
 
 import com.example.demo.team.Team;
-import com.example.demo.team.TeamRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,14 +16,11 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
 @ExtendWith(MockitoExtension.class)
 public class PlayerServiceTest {
 
     @Mock
     private PlayerRepository playerRepo;
-    @Mock
-    private TeamRepository teamRepo;
     private PlayerService underTest;
 
     @BeforeEach
@@ -172,7 +168,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByTeamWhenIncorrectTeamTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Team barca = new Team("Barcelona FC", "Barcelona");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
@@ -191,7 +187,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByTeamTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -216,7 +212,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByTeamNameWhenIncorrectTeamNameTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -234,7 +230,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByTeamNameTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -259,14 +255,14 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByCityWhenIncorrectCityTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
         // When
         when(playerRepo.findByTeamCity(anyString())).thenAnswer(invocation -> {
             String argument = invocation.getArgument(0);
-            return argument.equals("Italy") ? List.of(player) : new ArrayList<>();
+            return argument.equals("Naples") ? List.of(player) : new ArrayList<>();
         });
         List<Player> players = underTest.getPlayersByCity("Barcelona");
 
@@ -277,13 +273,13 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByCityTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
         // When
-        when(playerRepo.findByTeamCity("Italy")).thenReturn(List.of(player));
-        List<Player> players = underTest.getPlayersByCity("Italy");
+        when(playerRepo.findByTeamCity("Naples")).thenReturn(List.of(player));
+        List<Player> players = underTest.getPlayersByCity("Naples");
 
         // Then
         assertThat(players.isEmpty()).isFalse();
@@ -308,7 +304,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByNumberWhenIncorrectNumberTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -326,7 +322,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByNumberTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -350,13 +346,13 @@ public class PlayerServiceTest {
     @Test
     void getPlayerByTeamAndNumberWhenNumberIsNullOrIllegalTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Italy"), null))
+        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
-        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Italy"), 0))
+        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), 0))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
-        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Italy"), -3))
+        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), -3))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
     }
@@ -364,7 +360,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayerByTeamAndNumberWhenTeamOrNumberIsIncorrectTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Team barca = new Team("Barcelona FC", "Barcelona");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
@@ -395,7 +391,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayerByTeamAndNumberTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -421,7 +417,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayerByTeamNameAndNumberWhenTeamNameOrNumberIsIncorrectTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -451,7 +447,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayerByTeamNameAndNumberTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -486,25 +482,24 @@ public class PlayerServiceTest {
     @Test
     void addNewPlayerWhenPlayerAlreadyExistsTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
+        player.setId(1L);
         napoli.setPlayer(player);
 
         // When
-        when(playerRepo.existsById(anyLong())).thenAnswer(invocation -> {
-            Long argument = invocation.getArgument(0);
-            return argument.equals(1L);
-        });
+        when(playerRepo.existsById(1L)).thenReturn(true);
+
         underTest.addNewPlayer(player);
 
         // Then
-        verify(playerRepo).existsById(player.getId());
+        verify(playerRepo).existsById(1L);
     }
 
     @Test
     void addNewPlayerTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -531,7 +526,7 @@ public class PlayerServiceTest {
     @Test
     void deletePlayerWhenPlayerIDIsIncorrectTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -550,7 +545,7 @@ public class PlayerServiceTest {
     @Test
     void deletePlayerTest() {
         // Given
-        Team napoli = new Team("Napoli", "Italy");
+        Team napoli = new Team("Napoli", "Naples");
         Player player = new Player("Khvicha", "Kvarackhelia", napoli, 77);
         napoli.setPlayer(player);
 
@@ -560,5 +555,32 @@ public class PlayerServiceTest {
 
         // Then
         verify(playerRepo).deleteById(1L);
+    }
+
+    @Test
+    void updatePlayerTest() {
+        // Given
+        Team napoli = new Team("Napoli", "Naples");
+        Team barca = new Team("Barcelona FC", "Barcelona");
+        Long playerId = 1L;
+        Player existingPlayer = new Player("Khvicha", "Kvarackhelia", napoli, 77);
+        napoli.setPlayer(existingPlayer);
+
+        String newFirstName = "Lionel";
+        String newLastName = "Messi";
+        Integer newJerseyNumber = 10;
+
+        // When
+        when(playerRepo.findById(playerId)).thenReturn(Optional.of(existingPlayer));
+
+        underTest.updatePlayer(playerId, newFirstName, newLastName, barca, newJerseyNumber);
+
+        // Then
+        verify(playerRepo, times(2)).findById(playerId);
+
+        assertThat(existingPlayer.getFirstName()).isEqualTo(newFirstName);
+        assertThat(existingPlayer.getLastName()).isEqualTo(newLastName);
+        assertThat(existingPlayer.getTeam()).isEqualTo(barca);
+        assertThat(existingPlayer.getJerseyNumber()).isEqualTo(newJerseyNumber);
     }
 }
