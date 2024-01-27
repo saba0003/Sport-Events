@@ -35,10 +35,10 @@ public class EventController {
 
     @PutMapping(path = {"eventId"})
     public void updateEvent(@PathVariable Long eventId,
-                            @RequestParam(required = false) String name,
+                            @RequestParam(required = false) String title,
                             @RequestParam(required = false) Team team1,
                             @RequestParam(required = false) Team team2,
                             @RequestParam(required = false) LocalDateTime startDate) {
-        eventService.updateEvent(eventId, name, team1, team2, startDate);
+        eventService.updateEvent(eventId, title, team1, team2, startDate);
     }
 }

@@ -43,16 +43,16 @@ public class EventService {
         return events;
     }
 
-    public Event getEventByName(String name) {
-        if (name == null) {
-            logger.error("Invalid name!");
-            throw new IllegalArgumentException("Invalid name!");
+    public Event getEventByName(String title) {
+        if (title == null) {
+            logger.error("Invalid title!");
+            throw new IllegalArgumentException("Invalid title!");
         }
-        if (eventRepository.findEventByName(name) == null) {
-            logger.info(String.format("Event with name %s doesn't exist!", name));
-            throw new IllegalArgumentException("Wrong name!");
+        if (eventRepository.findEventByTitle(title) == null) {
+            logger.info(String.format("Event with title %s doesn't exist!", title));
+            throw new IllegalArgumentException("Wrong title!");
         }
-        return eventRepository.findEventByName(name);
+        return eventRepository.findEventByTitle(title);
     }
 
     public List<Event> getEventsByStartingDate(LocalDate startDate) {
@@ -78,7 +78,7 @@ public class EventService {
             String input = sc.nextLine().toLowerCase();
             sc.close();
             if (input.equals("y"))
-                updateEvent(event.getId(), event.getName(), event.getTeam1(), event.getTeam2(), event.getStartDate());
+                updateEvent(event.getId(), event.getTitle(), event.getTeam1(), event.getTeam2(), event.getStartDate());
             return;
         }
         eventRepository.save(event);
@@ -88,7 +88,7 @@ public class EventService {
     public void deleteEvent(Long eventId) {
         Event event = getEventById(eventId);
         Scanner sc = new Scanner(System.in);
-        System.out.printf("Are you sure you want to delete event: %s? y/n%n", event.getName());
+        System.out.printf("Are you sure you want to delete event: %s? y/n%n", event.getTitle());
         String input = sc.nextLine().toLowerCase();
         sc.close();
         if (input.equals("y")) {
@@ -131,7 +131,7 @@ public class EventService {
         }
 
         Event event = getEventById(eventId);
-        event.setName(name);
+        event.setTitle(name);
         event.setTeam1(team1);
         event.setTeam2(team2);
         event.setStartDate(startDate);

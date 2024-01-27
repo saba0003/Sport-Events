@@ -1,7 +1,12 @@
 package com.example.demo.event;
 
 import com.example.demo.team.Team;
+import com.example.demo.util.Score;
+import com.example.demo.util.Status;
 import jakarta.persistence.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 
@@ -9,24 +14,59 @@ import java.time.LocalDateTime;
 @Table(name = "events")
 public class Event {
 
+    private static final Logger logger = LogManager.getLogger(Event.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    @NonNull
+    private String title;
     @ManyToOne(optional = false)
     private Team team1;
     @ManyToOne(optional = false)
     private Team team2;
     private LocalDateTime startDate;
+    private Status status;
+    @Embedded
+    private Score score;
+    @ManyToOne(optional = true)
+    private Team winner;
 
     public Event() {
+        logger.info("Event created!");
     }
 
-    public Event(String name, Team team1, Team team2, LocalDateTime startDate) {
-        this.name = name;
+    public Event(String title, Team team1, Team team2) {
+        if (title == null || team1 == null || team2 == null) {
+            logger.error("Invalid title or teams!");
+            throw new IllegalArgumentException("Title or any participating teams can't be null!");
+        }
+        this.title = title;
+        this.team1 = team1;
+        this.team2 = team2;
+        status = Status.UNSCHEDULED;
+        logger.info("Event created!");
+    }
+
+    public Event(String title, Team team1, Team team2, LocalDateTime startDate) {
+        if (title == null || team1 == null || team2 == null) {
+            logger.error("Invalid title or teams!");
+            throw new IllegalArgumentException("Title or any participating teams can't be null!");
+        }
+        if (startDate == null) {
+            logger.error("Invalid start date!");
+            throw new IllegalArgumentException("Start date cannot be null!");
+        }
+        if (startDate.isBefore(LocalDateTime.now())) {
+            logger.error("Invalid start date!");
+            throw new IllegalArgumentException("Start date must be in the future!");
+        }
+        this.title = title;
         this.team1 = team1;
         this.team2 = team2;
         this.startDate = startDate;
+        status = Status.SCHEDULED;
+        logger.info("Event created!");
     }
 
     public Long getId() {
@@ -37,12 +77,12 @@ public class Event {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Team getTeam1() {
@@ -67,5 +107,29 @@ public class Event {
 
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Score getScore() {
+        return score;
+    }
+
+    public void setScore(Score score) {
+        this.score = score;
+    }
+
+    public Team getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Team winner) {
+        this.winner = winner;
     }
 }
