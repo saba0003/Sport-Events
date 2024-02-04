@@ -4,19 +4,16 @@ import com.example.demo.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.ToString;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "teams")
 //@ToString
 public class Team {
-
-    private static final Logger logger = LogManager.getLogger(Team.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,24 +29,18 @@ public class Team {
     private int numberOfPlayers;
 
     public Team() {
-        logger.info("Team created!");
     }
 
     public Team(String name, String city) {
-        if (name == null || city == null) {
-            logger.error("Invalid name or city!");
+        if (name == null || city == null)
             throw new IllegalArgumentException("Name or city can't be null!");
-        }
         this.name = name;
         this.city = city;
-        logger.info("Team created!");
     }
 
     public Team(String name, String city, List<Player> players) {
-        if (name == null || city == null) {
-            logger.error("Invalid name or city!");
+        if (name == null || city == null)
             throw new IllegalArgumentException("Name or city can't be null!");
-        }
         this.name = name;
         this.city = city;
         this.players = players;
@@ -105,5 +96,19 @@ public class Team {
 
     public void decrementNumOfPlayers() {
         numberOfPlayers--;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Team other = (Team) obj;
+
+        if (!Objects.equals(this.name, other.name)) return false;
+        if (!Objects.equals(this.city, other.city)) return false;
+        if (!Objects.equals(this.players, other.players)) return false;
+
+        return true;
     }
 }

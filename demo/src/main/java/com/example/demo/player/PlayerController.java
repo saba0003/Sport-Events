@@ -1,6 +1,5 @@
 package com.example.demo.player;
 
-import com.example.demo.team.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,45 +19,31 @@ public class PlayerController {
     }
 
     @GetMapping
-    public List<Player> listPlayers() {
-        return playerService.getPlayers();
+    public ResponseEntity<List<Player>> listPlayers() {
+        return new ResponseEntity<>(playerService.getPlayers(), HttpStatus.OK);
     }
 
     @GetMapping(path = "{playerId}")
-    public Player getSpecificPlayer(@PathVariable Long playerId) {
-        return playerService.getPlayerById(playerId);
+    public ResponseEntity<Player> getSpecificPlayer(@PathVariable Long playerId) {
+        return new ResponseEntity<>(playerService.getPlayerById(playerId), HttpStatus.OK);
     }
 
     @PostMapping(path = "create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerNewPlayer(@RequestBody Player player) {
-        playerService.addNewPlayer(player);
+    public ResponseEntity<Player> registerNewPlayer(@RequestBody Player player) {
+        return new ResponseEntity<>(playerService.addNewPlayer(player), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "{playerId}/delete")
-    public void deletePlayer(@PathVariable Long playerId) {
+    public ResponseEntity<String> deletePlayer(@PathVariable Long playerId) {
         playerService.deletePlayer(playerId);
+        return new ResponseEntity<>("Player deleted!", HttpStatus.OK);
     }
-
-//    @PutMapping(path = "{playerId}/update")
-//    public Player updatePlayer(@PathVariable Long playerId,
-//                             @RequestParam(required = false) String firstName,
-//                             @RequestParam(required = false) String lastname,
-//                             @RequestParam(required = false) Team team,
-//                             @RequestParam(required = false) Integer jerseyNumber) {
-//        return playerService.updatePlayer(playerId, firstName, lastname, team, jerseyNumber);
-//    }
 
     @PutMapping(path = "{playerId}/update")
     public ResponseEntity<Player> updatePlayer(@PathVariable Long playerId,
                                                @RequestBody Player player) {
-        player.setId(playerId);
-        Player response = playerService.updatePlayer(
-                playerId,
-                player.getFirstName(),
-                player.getLastName(),
-                player.getTeam(),
-                player.getJerseyNumber());
+        Player response = playerService.updatePlayer(playerId, player);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

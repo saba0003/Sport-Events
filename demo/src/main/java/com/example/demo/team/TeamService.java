@@ -76,20 +76,24 @@ public class TeamService {
     }
 
     public List<Team> getTeams() {
-        return teamRepository.findAll();
+        List<Team> teams = teamRepository.findAll();
+        if (teams.isEmpty())
+            logger.info("No team found!");
+        return teams;
     }
 
-    public void addNewTeam(Team team) {
+    public Team addNewTeam(Team team) {
         if (team == null) {
             logger.error("Invalid team!");
             throw new IllegalArgumentException("Invalid team!");
         }
         if (teamRepository.existsById(team.getId())) {
             logger.error("Team with this ID already exists!");
-            return;
+            return team;
         }
         teamRepository.save(team);
         logger.info("Team successfully added!");
+        return team;
     }
 
     public void deleteTeam(Long teamId) {
@@ -99,26 +103,20 @@ public class TeamService {
     }
 
     @Transactional
-    public void updateTeam(Long teamId, String name, String city, List<Player> players) {
-        Team team = getTeamById(teamId);
+    public Team updateTeam(Long teamId, Team team) {
+        Team actual = teamRepository.findById(teamId).orElseThrow(() -> new IllegalArgumentException("Team couldn't be found!"));
 
-        if (name == null || name.trim().isEmpty()) {
-            logger.error("Invalid name!");
-            throw new IllegalArgumentException("Name can't be null or empty!");
+        if (actual.equals(team)) {
+            logger.info("Team already exists!");
+            return actual;
         }
-        if (!team.getName().equals(name))
-            team.setName(name);
 
-        if (city == null || city.trim().isEmpty()) {
-            logger.error("Invalid city!");
-            throw new IllegalArgumentException("City can't be null or empty!");
-        }
-        if (!team.getCity().equals(city))
-            team.setCity(city);
-
-        if (!team.getPlayers().equals(players))
-            team.setPlayers(players);
+        actual.setName(team.getName());
+        actual.setCity(team.getCity());
+        actual.setPlayers(team.getPlayers());
 
         logger.info("Team successfully updated!");
+
+        return actual;
     }
 }

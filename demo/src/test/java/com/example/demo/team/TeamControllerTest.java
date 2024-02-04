@@ -1,6 +1,6 @@
-package com.example.demo.player;
+package com.example.demo.team;
 
-import com.example.demo.team.Team;
+import com.example.demo.player.Player;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,17 +25,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = PlayerController.class)
+@WebMvcTest(controllers = TeamController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
-public class PlayerControllerTest {
+public class TeamControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private PlayerService playerService;
+    private TeamService teamService;
 
     private Team napoli, barca, real;
     private Player kvara, osimhen, politano;
@@ -63,102 +63,106 @@ public class PlayerControllerTest {
     }
 
     @Test
-    void listPlayersTest() throws Exception {
+    void listAllTeamsTest() throws Exception {
         // Given
-        List<Player> players = List.of(kvara, osimhen, politano);
+        List<Team> teams = List.of(napoli, barca, real);
 
         // When
-        when(playerService.getPlayers()).thenReturn(players);
+        when(teamService.getTeams()).thenReturn(teams);
 
-        ResultActions response = mockMvc.perform(get("/api/v1/players")
+        ResultActions response = mockMvc.perform(get("/api/v1/teams")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // Then
         response
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", CoreMatchers.is(players.size())))
-                .andExpect(jsonPath("$[0].firstName", CoreMatchers.is("Khvicha")))
-                .andExpect(jsonPath("$[0].lastName", CoreMatchers.is("Kvaratskhelia")))
-                .andExpect(jsonPath("$[0].team.city", CoreMatchers.is("Naples")))
-                .andExpect(jsonPath("$[0].jerseyNumber", CoreMatchers.is(77)))
+                .andExpect(jsonPath("$.size()", CoreMatchers.is(teams.size())))
+                .andExpect(jsonPath("$[0].name", CoreMatchers.is("Napoli")))
+                .andExpect(jsonPath("$[0].city", CoreMatchers.is("Naples")))
+                .andExpect(jsonPath("$[0].numOfPlayers", CoreMatchers.is(teams.size())))
                 .andDo(print());
     }
 
     @Test
-    void getSpecificPlayerTest() throws Exception {
-        // When
-        when(playerService.getPlayerById(1L)).thenReturn(kvara);
+    void getSpecificTeamTest() throws Exception {
 
-        ResultActions response = mockMvc.perform(get("/api/v1/players/1")
+
+        // When
+        when(teamService.getTeamById(1L)).thenReturn(napoli);
+
+        ResultActions response = mockMvc.perform(get("/api/v1/teams/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(kvara)));
+                .content(objectMapper.writeValueAsString(napoli)));
 
         // Then
         response
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", CoreMatchers.is("Khvicha")))
-                .andExpect(jsonPath("$.lastName", CoreMatchers.is("Kvaratskhelia")))
-                .andExpect(jsonPath("$.team.city", CoreMatchers.is("Naples")))
-                .andExpect(jsonPath("$.jerseyNumber", CoreMatchers.is(77)))
+                .andExpect(jsonPath("$.name", CoreMatchers.is(napoli.getName())))
+                .andExpect(jsonPath("$.city", CoreMatchers.is(napoli.getCity())))
+                .andExpect(jsonPath("$.numOfPlayers", CoreMatchers.is(napoli.getNumOfPlayers())))
                 .andDo(print());
     }
 
     @Test
-    void registerNewPlayerTest() throws Exception {
+    void registerNewTeamTest() throws Exception {
         // Given
-        given(playerService.addNewPlayer(ArgumentMatchers.any(Player.class))).willAnswer(invocation -> invocation.getArgument(0));
+        given(teamService.addNewTeam(ArgumentMatchers.any(Team.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // When
-        ResultActions response = mockMvc.perform(post("/api/v1/players/create")
+        ResultActions response = mockMvc.perform(post("/api/v1/teams/create")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(kvara)));
+                .content(objectMapper.writeValueAsString(napoli)));
 
         // Then
         response
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstName", CoreMatchers.is(kvara.getFirstName())))
-                .andExpect(jsonPath("$.lastName", CoreMatchers.is(kvara.getLastName())))
+                .andExpect(jsonPath("$.name", CoreMatchers.is(napoli.getName())))
+                .andExpect(jsonPath("$.city", CoreMatchers.is(napoli.getCity())))
+                // List of players property in Team class is json ignored.
+                // That's what fails me here and potentially
+                // that's what will fail me in the update test as well.
+                .andExpect(jsonPath("$.numOfPlayers", CoreMatchers.is(napoli.getNumOfPlayers())))
                 .andDo(print());
     }
 
     @Test
-    void deletePlayerTest() throws Exception {
+    void deleteTeamTest() throws Exception {
         // When
-        doNothing().when(playerService).deletePlayer(1L);
+        doNothing().when(teamService).deleteTeam(1L);
 
-        ResultActions response = mockMvc.perform(delete("/api/v1/players/1/delete")
+        ResultActions response = mockMvc.perform(delete("/api/v1/teams/1/delete")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // Then
         response
                 .andExpect(status().isOk())
-                .andExpect(content().string("Player deleted!"));
+                .andExpect(content().string("Team deleted!"));
     }
 
     @Test
-    void updatePlayerTest() throws Exception {
+    void updateTeamTest() throws Exception {
         // Given
-        ArgumentCaptor<Long> playerIdCaptor = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Player> playerCaptor = ArgumentCaptor.forClass(Player.class);
+        ArgumentCaptor<Long> teamIdCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Team> teamCaptor = ArgumentCaptor.forClass(Team.class);
 
         // When
-        when(playerService.updatePlayer(playerIdCaptor.capture(), playerCaptor.capture())).thenAnswer(invocation -> {
+        when(teamService.updateTeam(teamIdCaptor.capture(), teamCaptor.capture())).thenAnswer(invocation -> {
             Long id = invocation.getArgument(0);
-            Player player = invocation.getArgument(1);
-            return id == 1 ? player : new IllegalArgumentException("Couldn't be updated!");
+            Team team = invocation.getArgument(1);
+            return id == 1 ? team : new IllegalArgumentException("Couldn't be updated!");
         });
 
-        ResultActions response = mockMvc.perform(put("/api/v1/players/1/update")
+        ResultActions response = mockMvc.perform(put("/api/v1/teams/1/update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(kvara)));
+                .content(objectMapper.writeValueAsString(napoli)));
 
         // Then
         response
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", CoreMatchers.is(kvara.getFirstName())))
-                .andExpect(jsonPath("$.lastName", CoreMatchers.is(kvara.getLastName())))
-                .andExpect(jsonPath("$.team.city", CoreMatchers.is(kvara.getTeam().getCity())))
-                .andExpect(jsonPath("$.jerseyNumber", CoreMatchers.is(kvara.getJerseyNumber())))
+                .andExpect(jsonPath("$.name", CoreMatchers.is(napoli.getName())))
+                .andExpect(jsonPath("$.city", CoreMatchers.is(napoli.getCity())))
+                // I was right. Now, how resolve this.
+                .andExpect(jsonPath("$.numOfPlayers", CoreMatchers.is(napoli.getNumOfPlayers())))
                 .andDo(print());
     }
 }

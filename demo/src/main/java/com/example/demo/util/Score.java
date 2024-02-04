@@ -8,6 +8,10 @@ public class Score {
     private int homeTeamScore;
     private int awayTeamScore;
 
+    public Score() {
+        homeTeamScore = awayTeamScore = 0;
+    }
+
     public Score(int homeTeamScore, int awayTeamScore) {
         this.homeTeamScore = homeTeamScore;
         this.awayTeamScore = awayTeamScore;
@@ -27,6 +31,26 @@ public class Score {
 
     public void setAwayTeamScore(int awayTeamScore) {
         this.awayTeamScore = awayTeamScore;
+    }
+
+    public void incrementHomeTeamScore() {
+        homeTeamScore++;
+    }
+
+    public void decrementHomeTeamScore() {
+        homeTeamScore--;
+    }
+
+    public void incrementAwayTeamScore() {
+        awayTeamScore++;
+    }
+
+    public void decrementAwayTeamScore() {
+        awayTeamScore--;
+    }
+
+    public void defaultScore() {
+        homeTeamScore = awayTeamScore = 0;
     }
 
     @Override

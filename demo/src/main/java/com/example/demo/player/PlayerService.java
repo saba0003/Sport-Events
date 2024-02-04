@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class PlayerService {
@@ -55,17 +54,6 @@ public class PlayerService {
             logger.info("No players found with lastname: " + lastName);
         return players;
     }
-
-//    public List<Player> getPlayersByFullName(FullName fullName) {
-//        if (fullName == null) {
-//            logger.error("Invalid full-name!");
-//            throw new IllegalArgumentException("Invalid full-name!");
-//        }
-//        List<Player> players = playerRepository.findByFullName(fullName.toString());
-//        if (players.isEmpty())
-//            logger.info("No players found with full-name: " + fullName);
-//        return players;
-//    }
 
     public List<Player> getPlayersByTeam(Team team) {
         if (team == null) {
@@ -168,20 +156,24 @@ public class PlayerService {
     }
 
     public List<Player> getPlayers() {
-        return playerRepository.findAll();
+        List<Player> players = playerRepository.findAll();
+        if (players.isEmpty())
+            logger.info("No player found!");
+        return players;
     }
 
-    public void addNewPlayer(Player player) {
+    public Player addNewPlayer(Player player) {
         if (player == null) {
             logger.error("Invalid player!");
             throw new IllegalArgumentException("Invalid player!");
         }
         if (playerRepository.existsById(player.getId())) {
             logger.warn("Player with this ID already exists!");
-            return;
+            return player;
         }
         playerRepository.save(player);
         logger.info("Player successfully added!");
+        return player;
     }
 
     public void deletePlayer(Long playerId) {
@@ -191,38 +183,21 @@ public class PlayerService {
     }
 
     @Transactional
-    public Player updatePlayer(Long playerId, String firstName, String lastName, Team team, Integer jerseyNumber) {
-        Player player = getPlayerById(playerId);
+    public Player updatePlayer(Long playerId, Player player) {
+        Player actual = playerRepository.findById(playerId).orElseThrow(() -> new IllegalArgumentException("Player couldn't be found!"));
 
-        if (firstName == null || firstName.trim().isEmpty()) {
-            logger.error("Invalid firstname!");
-            throw new IllegalArgumentException("Firstname can't be null or empty!");
+        if (actual.equals(player)) {
+            logger.info("Player already exists!");
+            return actual;
         }
-        if (!player.getFirstName().equals(firstName))
-            player.setFirstName(firstName);
 
-        if (lastName == null || lastName.trim().isEmpty()) {
-            logger.error("Invalid lastname!");
-            throw new IllegalArgumentException("Lastname can't be null or empty!");
-        }
-        if (!player.getLastName().equals(lastName))
-            player.setLastName(lastName);
-
-        if (team == null) {
-            logger.error("Invalid team!");
-            throw new IllegalArgumentException("Team can't be null!");
-        }
-        if (!player.getTeam().equals(team))
-            player.setTeam(team);
-
-        if (jerseyNumber == null || jerseyNumber < 1) {
-            logger.error("Invalid jersey number!");
-            throw new IllegalArgumentException("Jersey number can't be null or below zero!");
-        }
-        if (!Objects.equals(player.getJerseyNumber(), jerseyNumber))
-            player.setJerseyNumber(jerseyNumber);
+        actual.setFirstName(player.getFirstName());
+        actual.setLastName(player.getLastName());
+        actual.setTeam(player.getTeam());
+        actual.setJerseyNumber(player.getJerseyNumber());
 
         logger.info("Player successfully updated!");
-        return player;
+
+        return actual;
     }
 }

@@ -276,14 +276,15 @@ public class TeamServiceTest {
         String newName = "Barcelona FC";
         String newCity = "Barcelona";
         List<Player> newPlayersList = new ArrayList<>();
+        Team team = new Team(newName, newCity, newPlayersList);
 
         // When
         when(teamRepo.findById(1L)).thenReturn(Optional.of(napoli));
 
-        underTest.updateTeam(teamId, newName, newCity, newPlayersList);
+        underTest.updateTeam(teamId, team);
 
         // Then
-        verify(teamRepo, times(2)).findById(1L);
+        verify(teamRepo).findById(1L);
 
         assertThat(napoli.getName()).isEqualTo(newName);
         assertThat(napoli.getCity()).isEqualTo(newCity);

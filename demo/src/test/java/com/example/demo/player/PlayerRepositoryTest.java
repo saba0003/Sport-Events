@@ -75,6 +75,20 @@ public class PlayerRepositoryTest {
     }
 
     @Test
+    void tryingToInitializePlayerTest() {
+        // Given
+        Player player = new Player("Khvicha", "Kvarackhelia");
+        playerRepo.save(player);
+
+        // When
+        Player savedPlayer = playerRepo.findById(player.getId()).orElse(null);
+
+        // Then
+        assertThat(savedPlayer).isNotNull();
+        assertThat(savedPlayer.getFullName()).isEqualTo(player.getFullName());
+    }
+
+    @Test
     void findByFirstNameOrLastNameBeingNullTest() {
         // Given
         Player player = new Player("Khvicha", "Kvarackhelia");

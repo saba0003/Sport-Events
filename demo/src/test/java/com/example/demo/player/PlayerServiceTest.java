@@ -474,6 +474,7 @@ public class PlayerServiceTest {
 
     @Test
     void addNewPlayerWhenNewPlayerIsNullTest() {
+        // When & Then
         assertThatThrownBy(() -> underTest.addNewPlayer(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid player!");
@@ -518,6 +519,7 @@ public class PlayerServiceTest {
 
     @Test
     void deletePlayerWhenPlayerIDIsNullTest() {
+        // When & Then
         assertThatThrownBy(() -> underTest.deletePlayer(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid ID!");
@@ -569,14 +571,15 @@ public class PlayerServiceTest {
         String newFirstName = "Lionel";
         String newLastName = "Messi";
         Integer newJerseyNumber = 10;
+        Player messi = new Player(newFirstName, newLastName, barca, newJerseyNumber);
 
         // When
         when(playerRepo.findById(playerId)).thenReturn(Optional.of(existingPlayer));
 
-        underTest.updatePlayer(playerId, newFirstName, newLastName, barca, newJerseyNumber);
+        underTest.updatePlayer(playerId, messi);
 
         // Then
-        verify(playerRepo, times(2)).findById(playerId);
+        verify(playerRepo).findById(playerId);
 
         assertThat(existingPlayer.getFirstName()).isEqualTo(newFirstName);
         assertThat(existingPlayer.getLastName()).isEqualTo(newLastName);
