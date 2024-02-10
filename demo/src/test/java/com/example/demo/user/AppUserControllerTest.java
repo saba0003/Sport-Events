@@ -62,7 +62,7 @@ public class AppUserControllerTest {
         // When
         when(userService.getUsers()).thenReturn(users);
 
-        ResultActions response = mockMvc.perform(get("/api/v1/users")
+        ResultActions response = mockMvc.perform(get("/api/v1/appusers")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // Then
@@ -88,7 +88,7 @@ public class AppUserControllerTest {
             };
         });
 
-        ResultActions response = mockMvc.perform(get("/api/v1/users/1")
+        ResultActions response = mockMvc.perform(get("/api/v1/appusers/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(spectator)));
 
@@ -107,7 +107,9 @@ public class AppUserControllerTest {
         given(userService.addNewUser(ArgumentMatchers.any(AppUser.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         // When
-        ResultActions response = mockMvc.perform(post("/api/v1/users/create")
+        // The issue lies in the fact that GrantedAuthority is an interface,
+        // and Jackson doesn't know how to construct instances of interfaces directly.
+        ResultActions response = mockMvc.perform(post("/api/v1/appusers/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(spectator)));
 
@@ -125,7 +127,7 @@ public class AppUserControllerTest {
         // When
         doNothing().when(userService).deleteUser(1L);
 
-        ResultActions response = mockMvc.perform(delete("/api/v1/users/1/delete")
+        ResultActions response = mockMvc.perform(delete("/api/v1/appusers/1/delete")
                 .contentType(MediaType.APPLICATION_JSON));
 
         // Then
@@ -147,7 +149,9 @@ public class AppUserControllerTest {
             return id == 1L ? user : new IllegalArgumentException("Couldn't be updated!");
         });
 
-        ResultActions response = mockMvc.perform(put("/api/v1/users/1/update")
+        // The issue lies in the fact that GrantedAuthority is an interface,
+        // and Jackson doesn't know how to construct instances of interfaces directly.
+        ResultActions response = mockMvc.perform(put("/api/v1/appusers/1/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(spectator)));
 

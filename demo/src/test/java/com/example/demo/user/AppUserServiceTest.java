@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -23,6 +25,7 @@ public class AppUserServiceTest {
 
     @Mock
     private AppUserRepository userRepo;
+    private PasswordEncoder passwordEncoder;
     private AppUserService underTest;
 
     private Spectator spectator;
@@ -32,7 +35,8 @@ public class AppUserServiceTest {
     @BeforeEach
     void setUp() {
         // Given
-        underTest = new AppUserService(userRepo);
+        passwordEncoder = new BCryptPasswordEncoder();
+        underTest = new AppUserService(userRepo, passwordEncoder);
         spectator = new Spectator("EddieBrock", "venom");
         coach = new Coach("VinceLombardi", "CrazyFoot");
         admin = new Admin("AndyAnderson", "IHeardThat!");
@@ -244,6 +248,7 @@ public class AppUserServiceTest {
     void updateUserTest() {
         // Given
         AppUser newCoach = new Coach("LucianoSpalletti", "NapoliInItsPrime!");
+        newCoach.setPassword(passwordEncoder.encode("NapoliInItsPrime!"));
 
         // When
         when(userRepo.findById(anyLong())).thenAnswer(invocation -> {

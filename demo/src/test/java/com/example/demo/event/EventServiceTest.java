@@ -1,6 +1,7 @@
 package com.example.demo.event;
 
 import com.example.demo.team.Team;
+import com.example.demo.team.TeamRepository;
 import com.example.demo.util.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ public class EventServiceTest {
 
     @Mock
     private EventRepository eventRepo;
+    @Mock
+    private TeamRepository teamRepo;
     private EventService underTest;
 
     private Team barca, real;
@@ -31,7 +34,7 @@ public class EventServiceTest {
     @BeforeEach
     void setUp() {
         // Given
-        underTest = new EventService(eventRepo);
+        underTest = new EventService(eventRepo, teamRepo);
 
         barca = new Team("Barcelona FC", "Barcelona");
         real = new Team("Real Madrid", "Madrid");
@@ -326,8 +329,11 @@ public class EventServiceTest {
         Team milan = new Team("AC Milan", "Milan");
         Team juventus = new Team("Juventus FC", "Turin");
         Event event = new Event("Europe League", milan, juventus);
+        milan.setId(1L); juventus.setId(2L);
 
         // When
+        when(teamRepo.findById(1L)).thenReturn(Optional.of(milan));
+        when(teamRepo.findById(2L)).thenReturn(Optional.of(juventus));
         when(eventRepo.findById(1L)).thenReturn(Optional.ofNullable(uefa));
 
         Event updatedEvent = underTest.updateEvent(1L, event);
