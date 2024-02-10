@@ -20,16 +20,16 @@ public class Event {
     @NonNull
     private String title;
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     private Team team1;
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     private Team team2;
     private LocalDateTime startDate;
     private Status status;
     @Embedded
     private Score score;
-    @ManyToOne(cascade = CascadeType.ALL, optional = true)
+    @ManyToOne(cascade = CascadeType.PERSIST, optional = true)
     private Team winner;
 
     public Event() {
@@ -158,14 +158,6 @@ public class Event {
         }
     }
 
-    private Team determineWinner() {
-        if (score.getHomeTeamScore() > score.getAwayTeamScore())
-            return team1;
-        else if (score.getHomeTeamScore() < score.getAwayTeamScore())
-            return team2;
-        return null;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -176,5 +168,13 @@ public class Event {
         if (!Objects.equals(this.title, other.title)) return false;
 
         return true;
+    }
+
+    private Team determineWinner() {
+        if (score.getHomeTeamScore() > score.getAwayTeamScore())
+            return team1;
+        else if (score.getHomeTeamScore() < score.getAwayTeamScore())
+            return team2;
+        return null;
     }
 }

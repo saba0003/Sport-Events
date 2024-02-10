@@ -4,10 +4,10 @@ import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AppUserService {
@@ -15,10 +15,12 @@ public class AppUserService {
     private static final Logger logger = LogManager.getLogger(AppUserService.class);
 
     private final AppUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AppUserService(AppUserRepository userRepository) {
+    public AppUserService(AppUserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AppUser getUserById(Long userId) {
@@ -57,10 +59,15 @@ public class AppUserService {
             logger.error("Invalid user!");
             throw new IllegalArgumentException("Invalid user!");
         }
+        if (userRepository.existsByUsername(user.getUsername())) {
+            logger.warn("Username is already taken!");
+            throw new IllegalArgumentException("Username is already taken!");
+        }
         if (userRepository.existsById(user.getId())) {
             logger.warn("User with this ID already exists!");
             return user;
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         logger.info("User successfully added!");
         return user;
@@ -81,17 +88,13 @@ public class AppUserService {
             return actual;
         }
 
-        Optional<AppUser> optional = userRepository.findByUsername(user.getUsername());
-        AppUser retrieved = null;
-        if (optional.isPresent())
-            retrieved = optional.get();
-        if (user.equals(retrieved)) {
-            logger.info("User already exists!");
-            return retrieved;
-        }
-
         actual.setUsername(user.getUsername());
-        actual.setPassword(user.getPassword());
+//        actual.setPassword(passwordEncoder.encode(user.getPassword()));
+//        for some reason, encrypted passwords were differing.
+        if (!user.getPassword().startsWith("$2a$"))
+            actual.setPassword(passwordEncoder.encode(user.getPassword()));
+        else
+            actual.setPassword(user.getPassword());
         actual.setRole(user.getRole());
 
         logger.info("User successfully updated!");

@@ -21,12 +21,12 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "register")
-    public ResponseEntity<String> registerUser(@RequestBody Map<String, String> userData) {
-        return authService.addNewUser(userData);
+    public ResponseEntity<String> register(@RequestBody Map<String, String> userData) {
+        return authService.registerUser(userData);
     }
 
     @PostMapping(path = "login")
     public ResponseEntity<String> login(@RequestBody Map<String, String> credentials) {
-        return authService.getUser(credentials);
+        return authService.loginUser(credentials);
     }
 }

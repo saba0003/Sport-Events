@@ -10,12 +10,6 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "players")
-// @ToString
-// Including this annotation resulted in infinite recursions while debugging testers.
-// Which also means that it slows down runtime, so I'm Checking this out until further notice.
-// Manually overriding `toString()` method didn't help either.
-// Same thing happened when I was trying to retrieve data from `Team` class.
-// Seemingly the problem is bidirectional (@OneToMany) relationship between entities, but I'm not sure.
 public class Player {
 
     @Id

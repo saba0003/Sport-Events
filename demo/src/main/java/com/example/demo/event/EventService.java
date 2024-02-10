@@ -1,6 +1,7 @@
 package com.example.demo.event;
 
 import com.example.demo.team.Team;
+import com.example.demo.team.TeamRepository;
 import com.example.demo.util.Score;
 import com.example.demo.util.ScoreBoardOperations;
 import com.example.demo.util.Status;
@@ -20,10 +21,12 @@ public class EventService {
     private static final Logger logger = LogManager.getLogger(EventService.class);
 
     private final EventRepository eventRepository;
+    private final TeamRepository teamRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, TeamRepository teamRepository) {
         this.eventRepository = eventRepository;
+        this.teamRepository = teamRepository;
     }
 
     public Event getEventById(Long eventId) {
@@ -114,6 +117,8 @@ public class EventService {
     @Transactional
     public Event updateEvent(Long eventId, Event event) {
         Event actual = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
+        Team team1 = teamRepository.findById(event.getTeam1().getId()).orElseThrow(() -> new IllegalArgumentException("Team 1 couldn't be found!"));
+        Team team2 = teamRepository.findById(event.getTeam2().getId()).orElseThrow(() -> new IllegalArgumentException("Team 2 couldn't be found!"));
 
         if (actual.equals(event)) {
             logger.info("Event already exists!");
@@ -121,8 +126,8 @@ public class EventService {
         }
 
         actual.setTitle(event.getTitle());
-        actual.setTeam1(event.getTeam1());
-        actual.setTeam2(event.getTeam2());
+        actual.setTeam1(team1);
+        actual.setTeam2(team2);
         actual.setStartDate(event.getStartDate());
 
         logger.info("Event successfully updated!");
@@ -130,79 +135,127 @@ public class EventService {
         return actual;
     }
 
-    public void StartEvent(Event event) {
-        if (event == null) {
-            logger.error("Invalid event!");
-            throw new IllegalArgumentException("Invalid event!");
+    public void startEvent(Long eventId) {
+        if (eventId == null) {
+            logger.error("Invalid ID!");
+            throw new IllegalArgumentException("Invalid ID!");
+        }
+        if (!eventRepository.existsById(eventId)) {
+            logger.warn(String.format("Event with ID %d doesn't exist!", eventId));
+            throw new IllegalArgumentException("Wrong ID!");
+        }
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
+        if (event.getStatus().equals(Status.ONGOING)) {
+            logger.warn("Game is already started!");
+            return;
         }
         event.start();
-        logger.info("Event started.");
+        logger.info("Game started.");
     }
 
-    public void stopTime(Event event) {
-        if (event == null) {
-            logger.error("Invalid event!");
-            throw new IllegalArgumentException("Invalid event!");
+    public void stopTime(Long eventId) {
+        if (eventId == null) {
+            logger.error("Invalid ID!");
+            throw new IllegalArgumentException("Invalid ID!");
         }
+        if (!eventRepository.existsById(eventId)) {
+            logger.warn(String.format("Event with ID %d doesn't exist!", eventId));
+            throw new IllegalArgumentException("Wrong ID!");
+        }
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
         if (event.getStatus().equals(Status.PAUSED)) {
-            logger.warn("Event is already paused!");
+            logger.warn("Game is already paused!");
             return;
         }
         event.stop();
-        logger.info("Event paused.");
+        logger.info("Game paused.");
     }
 
-    public void resumeTime(Event event) {
-        if (event == null) {
-            logger.error("Invalid event!");
-            throw new IllegalArgumentException("Invalid event!");
+    public void resumeTime(Long eventId) {
+        if (eventId == null) {
+            logger.error("Invalid ID!");
+            throw new IllegalArgumentException("Invalid ID!");
         }
+        if (!eventRepository.existsById(eventId)) {
+            logger.warn(String.format("Event with ID %d doesn't exist!", eventId));
+            throw new IllegalArgumentException("Wrong ID!");
+        }
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
         if (event.getStatus().equals(Status.ONGOING)) {
-            logger.warn("Event is already ongoing!");
+            logger.warn("Game is already ongoing!");
             return;
         }
         event.resume();
-        logger.info("Event unpaused.");
+        logger.info("Game unpaused.");
     }
 
-    public void finishEvent(Event event) {
-        if (event == null) {
-            logger.error("Invalid event!");
-            throw new IllegalArgumentException("Invalid event!");
+    public void finishEvent(Long eventId) {
+        if (eventId == null) {
+            logger.error("Invalid ID!");
+            throw new IllegalArgumentException("Invalid ID!");
+        }
+        if (!eventRepository.existsById(eventId)) {
+            logger.warn(String.format("Event with ID %d doesn't exist!", eventId));
+            throw new IllegalArgumentException("Wrong ID!");
+        }
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
+        if (event.getStatus().equals(Status.COMPLETED)) {
+            logger.warn("Game is already finished!");
+            return;
         }
         event.finish();
-        logger.info("Event finished.");
+        logger.info("Game finished.");
     }
 
-    public void cancelEvent(Event event) {
-        if (event == null) {
-            logger.error("Invalid event!");
-            throw new IllegalArgumentException("Invalid event!");
+    public void cancelEvent(Long eventId) {
+        if (eventId == null) {
+            logger.error("Invalid ID!");
+            throw new IllegalArgumentException("Invalid ID!");
+        }
+        if (!eventRepository.existsById(eventId)) {
+            logger.warn(String.format("Event with ID %d doesn't exist!", eventId));
+            throw new IllegalArgumentException("Wrong ID!");
+        }
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
+        if (event.getStatus().equals(Status.CANCELED)) {
+            logger.warn("Game is already canceled!");
+            return;
         }
         event.cancel();
-        logger.info("Event canceled.");
+        logger.info("Game canceled.");
     }
 
-    public Score getScore(Event event) {
-        if (event == null) {
-            logger.error("Invalid event!");
-            throw new IllegalArgumentException("Invalid event!");
+    public Score getScore(Long eventId) {
+        if (eventId == null) {
+            logger.error("Invalid ID!");
+            throw new IllegalArgumentException("Invalid ID!");
         }
+        if (!eventRepository.existsById(eventId)) {
+            logger.warn(String.format("Event with ID %d doesn't exist!", eventId));
+            throw new IllegalArgumentException("Wrong ID!");
+        }
+
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
+
         if (event.getScore() == null && event.getStatus().name().equals("CANCELED")) {
-            logger.warn("Event is canceled.");
+            logger.warn("Game is canceled.");
             return null;
         }
         if (event.getScore() == null && event.getStatus().name().equals("UNSCHEDULED")) {
-            logger.warn("Event is not Started yet.");
+            logger.warn("Game is not Started yet.");
             return null;
         }
         return event.getScore();
     }
 
-    public void updateScoreBoard(Event event, ScoreBoardOperations side_operation) {
-        if (event == null) {
-            logger.error("Invalid event!");
-            throw new IllegalArgumentException("Invalid event!");
+    public void updateScoreBoard(Long eventId, ScoreBoardOperations side_operation) {
+        if (eventId == null) {
+            logger.error("Invalid ID!");
+            throw new IllegalArgumentException("Invalid ID!");
+        }
+        if (!eventRepository.existsById(eventId)) {
+            logger.warn(String.format("Event with ID %d doesn't exist!", eventId));
+            throw new IllegalArgumentException("Wrong ID!");
         }
         if (side_operation == null) {
             logger.error("Invalid operation!");
@@ -212,6 +265,7 @@ public class EventService {
             logger.error("Illegal request!");
             throw new IllegalArgumentException("Illegal request!");
         }
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
         event.updateScoreBoard(side_operation);
         logger.info("Score board updated successfully.");
     }

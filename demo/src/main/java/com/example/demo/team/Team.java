@@ -12,7 +12,6 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "teams")
-//@ToString
 public class Team {
 
     @Id

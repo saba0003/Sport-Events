@@ -35,7 +35,7 @@ public class AuthenticationService {
 
     }
 
-    public ResponseEntity<String> addNewUser(Map<String, String> userData) {
+    public ResponseEntity<String> registerUser(Map<String, String> userData) {
         if (userData == null) {
             logger.error("Invalid user!");
             return new ResponseEntity<>("Invalid user!", HttpStatus.BAD_REQUEST);
@@ -68,7 +68,7 @@ public class AuthenticationService {
         return new ResponseEntity<>("User registered successfully!", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> getUser(Map<String, String> credentials) {
+    public ResponseEntity<String> loginUser(Map<String, String> credentials) {
         if (credentials == null) {
             logger.error("Invalid user!");
             return new ResponseEntity<>("Invalid user!", HttpStatus.BAD_REQUEST);
@@ -82,7 +82,7 @@ public class AuthenticationService {
         String password = credentials.get("password");
 
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+                Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             logger.info("User signed in successfully!");
             return new ResponseEntity<>("User signed in successfully!", HttpStatus.OK);

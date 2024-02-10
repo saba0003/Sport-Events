@@ -42,14 +42,6 @@ public abstract class AppUser implements UserDetails {
         this.password = password;
     }
 
-    public AppUser(String username, String password, Role role) {
-        if (username == null || password == null)
-            throw new IllegalArgumentException("Username or password can't be null!");
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
-
     public Long getId() {
         return id;
     }
