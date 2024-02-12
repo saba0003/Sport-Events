@@ -1,9 +1,7 @@
-package com.example.demo.team;
+package com.example.demo.models;
 
-import com.example.demo.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.ToString;
 import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;

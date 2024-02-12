@@ -1,10 +1,10 @@
 package com.example.demo.user;
 
-import com.example.demo.appuser.AppUserRepository;
-import com.example.demo.appuser.admin.Admin;
-import com.example.demo.appuser.coach.Coach;
-import com.example.demo.appuser.spectator.Spectator;
-import com.example.demo.appuser.AppUser;
+import com.example.demo.repositories.AppUserRepository;
+import com.example.demo.models.admin.Admin;
+import com.example.demo.models.coach.Coach;
+import com.example.demo.models.spectator.Spectator;
+import com.example.demo.models.AppUser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

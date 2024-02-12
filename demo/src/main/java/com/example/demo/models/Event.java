@@ -1,6 +1,5 @@
-package com.example.demo.event;
+package com.example.demo.models;
 
-import com.example.demo.team.Team;
 import com.example.demo.util.Score;
 import com.example.demo.util.ScoreBoardOperations;
 import com.example.demo.util.Status;
@@ -26,6 +25,7 @@ public class Event {
     @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     private Team team2;
     private LocalDateTime startDate;
+    @Enumerated(EnumType.STRING)
     private Status status;
     @Embedded
     private Score score;

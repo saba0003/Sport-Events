@@ -1,6 +1,9 @@
 package com.example.demo.player;
 
-import com.example.demo.team.Team;
+import com.example.demo.models.Player;
+import com.example.demo.repositories.PlayerRepository;
+import com.example.demo.services.implementations.PlayerServiceImpl;
+import com.example.demo.models.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,17 +24,17 @@ public class PlayerServiceTest {
 
     @Mock
     private PlayerRepository playerRepo;
-    private PlayerService underTest;
+    private PlayerServiceImpl testingInstance;
 
     @BeforeEach
     void setUp() {
-        underTest = new PlayerService(playerRepo);
+        testingInstance = new PlayerServiceImpl(playerRepo);
     }
 
     @Test
     void getPlayerByIdWhenIdIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayerById(null))
+        assertThatThrownBy(() -> testingInstance.getPlayerById(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid ID!");
     }
@@ -48,7 +51,7 @@ public class PlayerServiceTest {
         });
 
         // Then
-        assertThatThrownBy(() -> underTest.getPlayerById(2L))
+        assertThatThrownBy(() -> testingInstance.getPlayerById(2L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Wrong ID!");
     }
@@ -60,7 +63,7 @@ public class PlayerServiceTest {
 
         // When
         when(playerRepo.findById(1L)).thenReturn(Optional.of(player));
-        Player result = underTest.getPlayerById(1L);
+        Player result = testingInstance.getPlayerById(1L);
 
         // Then
         assertThat(result).isNotNull();
@@ -70,7 +73,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByFirstNameWhenFirstNameIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayersByFirstName(null))
+        assertThatThrownBy(() -> testingInstance.getPlayersByFirstName(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid firstname!");
     }
@@ -87,7 +90,7 @@ public class PlayerServiceTest {
             String argument = invocation.getArgument(0);
             return argument.equals("Khvicha") ? Arrays.asList(player1, player2, player3) : new ArrayList<>();
         });
-        List<Player> players = underTest.getPlayersByFirstName("Someone");
+        List<Player> players = testingInstance.getPlayersByFirstName("Someone");
 
         // Then
         assertThat(players.isEmpty()).isTrue();
@@ -102,7 +105,7 @@ public class PlayerServiceTest {
 
         // When
         when(playerRepo.findByFirstName("Khvicha")).thenReturn(Arrays.asList(player1, player2, player3));
-        List<Player> players = underTest.getPlayersByFirstName("Khvicha");
+        List<Player> players = testingInstance.getPlayersByFirstName("Khvicha");
 
         // Then
         assertThat(players.isEmpty()).isFalse();
@@ -115,7 +118,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByLastNameWhenLastNameIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayersByLastName(null))
+        assertThatThrownBy(() -> testingInstance.getPlayersByLastName(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid lastname!");
     }
@@ -132,7 +135,7 @@ public class PlayerServiceTest {
             String argument = invocation.getArgument(0);
             return argument.equals("Mikautadze") ? Arrays.asList(player1, player2, player3) : new ArrayList<>();
         });
-        List<Player> players = underTest.getPlayersByLastName("Someone");
+        List<Player> players = testingInstance.getPlayersByLastName("Someone");
 
         // Then
         assertThat(players.isEmpty()).isTrue();
@@ -147,7 +150,7 @@ public class PlayerServiceTest {
 
         // When
         when(playerRepo.findByLastName("Khvicha")).thenReturn(Arrays.asList(player1, player2, player3));
-        List<Player> players = underTest.getPlayersByLastName("Khvicha");
+        List<Player> players = testingInstance.getPlayersByLastName("Khvicha");
 
         // Then
         assertThat(players.isEmpty()).isFalse();
@@ -160,7 +163,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByTeamWhenTeamIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayersByTeam(null))
+        assertThatThrownBy(() -> testingInstance.getPlayersByTeam(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid team!");
     }
@@ -178,7 +181,7 @@ public class PlayerServiceTest {
             Team argument = invocation.getArgument(0);
             return argument.equals(napoli) ? List.of(player) : new ArrayList<>();
         });
-        List<Player> players = underTest.getPlayersByTeam(barca);
+        List<Player> players = testingInstance.getPlayersByTeam(barca);
 
         // Then
         assertThat(players.isEmpty()).isTrue();
@@ -193,7 +196,7 @@ public class PlayerServiceTest {
 
         // When
         when(playerRepo.findByTeam(napoli)).thenReturn(List.of(player));
-        List<Player> players = underTest.getPlayersByTeam(napoli);
+        List<Player> players = testingInstance.getPlayersByTeam(napoli);
 
         // Then
         assertThat(players.isEmpty()).isFalse();
@@ -204,7 +207,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByTeamNameWhenTeamNameIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayersByTeamName(null))
+        assertThatThrownBy(() -> testingInstance.getPlayersByTeamName(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid name!");
     }
@@ -221,7 +224,7 @@ public class PlayerServiceTest {
             String argument = invocation.getArgument(0);
             return argument.equals("Napoli") ? List.of(player) : new ArrayList<>();
         });
-        List<Player> players = underTest.getPlayersByTeamName("Barcelona FC");
+        List<Player> players = testingInstance.getPlayersByTeamName("Barcelona FC");
 
         // Then
         assertThat(players.isEmpty()).isTrue();
@@ -236,7 +239,7 @@ public class PlayerServiceTest {
 
         // When
         when(playerRepo.findByTeamName("Napoli")).thenReturn(List.of(player));
-        List<Player> players = underTest.getPlayersByTeamName("Napoli");
+        List<Player> players = testingInstance.getPlayersByTeamName("Napoli");
 
         // Then
         assertThat(players.isEmpty()).isFalse();
@@ -247,7 +250,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByCityWhenCityIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayersByCity(null))
+        assertThatThrownBy(() -> testingInstance.getPlayersByCity(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid city!");
     }
@@ -264,7 +267,7 @@ public class PlayerServiceTest {
             String argument = invocation.getArgument(0);
             return argument.equals("Naples") ? List.of(player) : new ArrayList<>();
         });
-        List<Player> players = underTest.getPlayersByCity("Barcelona");
+        List<Player> players = testingInstance.getPlayersByCity("Barcelona");
 
         // Then
         assertThat(players.isEmpty()).isTrue();
@@ -279,7 +282,7 @@ public class PlayerServiceTest {
 
         // When
         when(playerRepo.findByTeamCity("Naples")).thenReturn(List.of(player));
-        List<Player> players = underTest.getPlayersByCity("Naples");
+        List<Player> players = testingInstance.getPlayersByCity("Naples");
 
         // Then
         assertThat(players.isEmpty()).isFalse();
@@ -290,13 +293,13 @@ public class PlayerServiceTest {
     @Test
     void getPlayersByNumberWhenNumberIsNullOrIllegalTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayersByNumber(null))
+        assertThatThrownBy(() -> testingInstance.getPlayersByNumber(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
-        assertThatThrownBy(() -> underTest.getPlayersByNumber(0))
+        assertThatThrownBy(() -> testingInstance.getPlayersByNumber(0))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
-        assertThatThrownBy(() -> underTest.getPlayersByNumber(-3))
+        assertThatThrownBy(() -> testingInstance.getPlayersByNumber(-3))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
     }
@@ -313,7 +316,7 @@ public class PlayerServiceTest {
             Integer argument = invocation.getArgument(0);
             return argument.equals(77) ? List.of(player) : new ArrayList<>();
         });
-        List<Player> players = underTest.getPlayersByNumber(10);
+        List<Player> players = testingInstance.getPlayersByNumber(10);
 
         // Then
         assertThat(players.isEmpty()).isTrue();
@@ -328,7 +331,7 @@ public class PlayerServiceTest {
 
         // When
         when(playerRepo.findByJerseyNumber(77)).thenReturn(List.of(player));
-        List<Player> players = underTest.getPlayersByNumber(77);
+        List<Player> players = testingInstance.getPlayersByNumber(77);
 
         // Then
         assertThat(players.isEmpty()).isFalse();
@@ -338,7 +341,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayerByTeamAndNumberWhenTeamIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(null, 77))
+        assertThatThrownBy(() -> testingInstance.getPlayerByTeamAndNumber(null, 77))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid team!");
     }
@@ -346,13 +349,13 @@ public class PlayerServiceTest {
     @Test
     void getPlayerByTeamAndNumberWhenNumberIsNullOrIllegalTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), null))
+        assertThatThrownBy(() -> testingInstance.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
-        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), 0))
+        assertThatThrownBy(() -> testingInstance.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), 0))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
-        assertThatThrownBy(() -> underTest.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), -3))
+        assertThatThrownBy(() -> testingInstance.getPlayerByTeamAndNumber(new Team("Napoli", "Naples"), -3))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid number!");
     }
@@ -380,8 +383,8 @@ public class PlayerServiceTest {
             return argument1.equals(napoli) && argument2.equals(77) ? player : null;
         });
 
-        Player result1 = underTest.getPlayerByTeamAndNumber(napoli, 78);
-        Player result2 = underTest.getPlayerByTeamAndNumber(barca, 10);
+        Player result1 = testingInstance.getPlayerByTeamAndNumber(napoli, 78);
+        Player result2 = testingInstance.getPlayerByTeamAndNumber(barca, 10);
 
         // Then
         assertThat(result1).isNull();
@@ -399,7 +402,7 @@ public class PlayerServiceTest {
         when(playerRepo.findByTeam(napoli)).thenReturn(List.of(player));
         when(playerRepo.findByJerseyNumber(77)).thenReturn(List.of(player));
         when(playerRepo.findByTeamAndJerseyNumber(napoli, 77)).thenReturn(player);
-        Player result = underTest.getPlayerByTeamAndNumber(napoli, 77);
+        Player result = testingInstance.getPlayerByTeamAndNumber(napoli, 77);
 
         // Then
         assertThat(result).isNotNull();
@@ -409,7 +412,7 @@ public class PlayerServiceTest {
     @Test
     void getPlayerByTeamNameAndNumberWhenTeamNameIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.getPlayerByTeamNameAndNumber(null, 77))
+        assertThatThrownBy(() -> testingInstance.getPlayerByTeamNameAndNumber(null, 77))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid team name!");
     }
@@ -436,8 +439,8 @@ public class PlayerServiceTest {
             return argument1.equals("Napoli") && argument2.equals(77) ? player : null;
         });
 
-        Player result1 = underTest.getPlayerByTeamNameAndNumber("Napoli", 78);
-        Player result2 = underTest.getPlayerByTeamNameAndNumber("Barcelona FC", 10);
+        Player result1 = testingInstance.getPlayerByTeamNameAndNumber("Napoli", 78);
+        Player result2 = testingInstance.getPlayerByTeamNameAndNumber("Barcelona FC", 10);
 
         // Then
         assertThat(result1).isNull();
@@ -456,7 +459,7 @@ public class PlayerServiceTest {
         when(playerRepo.findByJerseyNumber(77)).thenReturn(List.of(player));
         when(playerRepo.findByTeamNameAndJerseyNumber("Napoli", 77)).thenReturn(player);
 
-        Player result = underTest.getPlayerByTeamNameAndNumber("Napoli", 77);
+        Player result = testingInstance.getPlayerByTeamNameAndNumber("Napoli", 77);
 
         // Then
         assertThat(result).isNotNull();
@@ -466,7 +469,7 @@ public class PlayerServiceTest {
     @Test
     void getAllPlayersTest() {
         // When
-        underTest.getPlayers();
+        testingInstance.getPlayers();
 
         // Then
         verify(playerRepo).findAll();
@@ -475,7 +478,7 @@ public class PlayerServiceTest {
     @Test
     void addNewPlayerWhenNewPlayerIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.addNewPlayer(null))
+        assertThatThrownBy(() -> testingInstance.addNewPlayer(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid player!");
     }
@@ -491,7 +494,7 @@ public class PlayerServiceTest {
         // When
         when(playerRepo.existsById(1L)).thenReturn(true);
 
-        underTest.addNewPlayer(player);
+        testingInstance.addNewPlayer(player);
 
         // Then
         verify(playerRepo).existsById(1L);
@@ -505,7 +508,7 @@ public class PlayerServiceTest {
         napoli.setPlayer(player);
 
         // When
-        underTest.addNewPlayer(player);
+        testingInstance.addNewPlayer(player);
 
         // Then
         ArgumentCaptor<Player> captor = ArgumentCaptor.forClass(Player.class);
@@ -520,7 +523,7 @@ public class PlayerServiceTest {
     @Test
     void deletePlayerWhenPlayerIDIsNullTest() {
         // When & Then
-        assertThatThrownBy(() -> underTest.deletePlayer(null))
+        assertThatThrownBy(() -> testingInstance.deletePlayer(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Invalid ID!");
     }
@@ -539,7 +542,7 @@ public class PlayerServiceTest {
         });
 
         // Then
-        assertThatThrownBy(() -> underTest.deletePlayer(2L))
+        assertThatThrownBy(() -> testingInstance.deletePlayer(2L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Wrong ID!");
     }
@@ -553,7 +556,7 @@ public class PlayerServiceTest {
 
         // When
         when(playerRepo.findById(1L)).thenReturn(Optional.of(player));
-        underTest.deletePlayer(1L);
+        testingInstance.deletePlayer(1L);
 
         // Then
         verify(playerRepo).deleteById(1L);
@@ -576,7 +579,7 @@ public class PlayerServiceTest {
         // When
         when(playerRepo.findById(playerId)).thenReturn(Optional.of(existingPlayer));
 
-        underTest.updatePlayer(playerId, messi);
+        testingInstance.updatePlayer(playerId, messi);
 
         // Then
         verify(playerRepo).findById(playerId);

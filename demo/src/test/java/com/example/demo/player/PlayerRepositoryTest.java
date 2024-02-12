@@ -1,7 +1,9 @@
 package com.example.demo.player;
 
-import com.example.demo.team.Team;
-import com.example.demo.team.TeamRepository;
+import com.example.demo.models.Player;
+import com.example.demo.repositories.PlayerRepository;
+import com.example.demo.models.Team;
+import com.example.demo.repositories.TeamRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

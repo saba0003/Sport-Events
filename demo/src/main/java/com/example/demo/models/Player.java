@@ -1,8 +1,6 @@
-package com.example.demo.player;
+package com.example.demo.models;
 
-import com.example.demo.team.Team;
 import jakarta.persistence.*;
-import lombok.ToString;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

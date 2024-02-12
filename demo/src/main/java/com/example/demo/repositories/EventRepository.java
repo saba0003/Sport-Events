@@ -1,6 +1,7 @@
-package com.example.demo.event;
+package com.example.demo.repositories;
 
-import com.example.demo.team.Team;
+import com.example.demo.models.Event;
+import com.example.demo.models.Team;
 import com.example.demo.util.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

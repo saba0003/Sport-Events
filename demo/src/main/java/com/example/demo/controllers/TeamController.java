@@ -1,5 +1,7 @@
-package com.example.demo.team;
+package com.example.demo.controllers;
 
+import com.example.demo.models.Team;
+import com.example.demo.services.implementations.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,10 @@ import java.util.List;
 @RequestMapping(path = "api/v1/teams")
 public class TeamController {
 
-    private final TeamService teamService;
+    private final TeamServiceImpl teamService;
 
     @Autowired
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamServiceImpl teamService) {
         this.teamService = teamService;
     }
 

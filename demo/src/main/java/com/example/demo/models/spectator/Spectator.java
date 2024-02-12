@@ -1,7 +1,7 @@
-package com.example.demo.appuser.spectator;
+package com.example.demo.models.spectator;
 
 import com.example.demo.util.Role;
-import com.example.demo.appuser.AppUser;
+import com.example.demo.models.AppUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;

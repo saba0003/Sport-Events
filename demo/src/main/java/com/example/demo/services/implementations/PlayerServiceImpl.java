@@ -1,6 +1,9 @@
-package com.example.demo.player;
+package com.example.demo.services.implementations;
 
-import com.example.demo.team.Team;
+import com.example.demo.models.Player;
+import com.example.demo.repositories.PlayerRepository;
+import com.example.demo.models.Team;
+import com.example.demo.services.PlayerService;
 import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,17 +13,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PlayerService {
+public class PlayerServiceImpl implements PlayerService {
 
-    private static final Logger logger = LogManager.getLogger(PlayerService.class);
+    private static final Logger logger = LogManager.getLogger(PlayerServiceImpl.class);
 
     private final PlayerRepository playerRepository;
 
     @Autowired
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 
+    @Override
     public Player getPlayerById(Long playerId) {
         if (playerId == null) {
             logger.error("Invalid ID!");
@@ -33,6 +37,7 @@ public class PlayerService {
         return playerRepository.findById(playerId).get();
     }
 
+    @Override
     public List<Player> getPlayersByFirstName(String firstName) {
         if (firstName == null) {
             logger.error("Invalid firstname!");
@@ -44,6 +49,7 @@ public class PlayerService {
         return players;
     }
 
+    @Override
     public List<Player> getPlayersByLastName(String lastName) {
         if (lastName == null) {
             logger.error("Invalid lastname!");
@@ -55,6 +61,7 @@ public class PlayerService {
         return players;
     }
 
+    @Override
     public List<Player> getPlayersByTeam(Team team) {
         if (team == null) {
             logger.error("Invalid team!");
@@ -66,6 +73,7 @@ public class PlayerService {
         return players;
     }
 
+    @Override
     public List<Player> getPlayersByTeamName(String name) {
         if (name == null) {
             logger.error("Invalid name!");
@@ -77,6 +85,7 @@ public class PlayerService {
         return players;
     }
 
+    @Override
     public List<Player> getPlayersByCity(String city) {
         if (city == null) {
             logger.error("Invalid city!");
@@ -88,6 +97,7 @@ public class PlayerService {
         return players;
     }
 
+    @Override
     public List<Player> getPlayersByNumber(Integer jerseyNumber) {
         if (jerseyNumber == null) {
             logger.error("Invalid number!");
@@ -107,6 +117,7 @@ public class PlayerService {
         return players;
     }
 
+    @Override
     public Player getPlayerByTeamAndNumber(Team team, Integer jerseyNumber) {
         if (team == null) {
             logger.error("Invalid team!");
@@ -131,6 +142,7 @@ public class PlayerService {
         return playerRepository.findByTeamAndJerseyNumber(team, jerseyNumber);
     }
 
+    @Override
     public Player getPlayerByTeamNameAndNumber(String name, Integer jerseyNumber) {
         if (name == null) {
             logger.error("Invalid team name!");
@@ -155,6 +167,7 @@ public class PlayerService {
         return playerRepository.findByTeamNameAndJerseyNumber(name, jerseyNumber);
     }
 
+    @Override
     public List<Player> getPlayers() {
         List<Player> players = playerRepository.findAll();
         if (players.isEmpty())
@@ -162,26 +175,34 @@ public class PlayerService {
         return players;
     }
 
+    @Override
     public Player addNewPlayer(Player player) {
         if (player == null) {
             logger.error("Invalid player!");
             throw new IllegalArgumentException("Invalid player!");
         }
-        if (playerRepository.existsById(player.getId())) {
-            logger.warn("Player with this ID already exists!");
-            return player;
+        if (player.getId() == null) {
+            playerRepository.save(player);
+            logger.info("Player successfully added!");
+        } else {
+            if (playerRepository.existsById(player.getId())) {
+                logger.warn("Player with this ID already exists!");
+            } else {
+                playerRepository.save(player);
+                logger.info("Player successfully added!");
+            }
         }
-        playerRepository.save(player);
-        logger.info("Player successfully added!");
         return player;
     }
 
+    @Override
     public void deletePlayer(Long playerId) {
         getPlayerById(playerId);
         playerRepository.deleteById(playerId);
         logger.info("Player deleted");
     }
 
+    @Override
     @Transactional
     public Player updatePlayer(Long playerId, Player player) {
         Player actual = playerRepository.findById(playerId).orElseThrow(() -> new IllegalArgumentException("Player couldn't be found!"));

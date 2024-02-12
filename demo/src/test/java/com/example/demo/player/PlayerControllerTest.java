@@ -1,6 +1,9 @@
 package com.example.demo.player;
 
-import com.example.demo.team.Team;
+import com.example.demo.controllers.PlayerController;
+import com.example.demo.models.Player;
+import com.example.demo.services.implementations.PlayerServiceImpl;
+import com.example.demo.models.Team;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +38,7 @@ public class PlayerControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private PlayerService playerService;
+    private PlayerServiceImpl playerService;
 
     private Team napoli, barca, real;
     private Player kvara, osimhen, politano;

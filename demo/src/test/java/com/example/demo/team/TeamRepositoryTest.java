@@ -1,6 +1,8 @@
 package com.example.demo.team;
 
-import com.example.demo.player.Player;
+import com.example.demo.models.Team;
+import com.example.demo.models.Player;
+import com.example.demo.repositories.TeamRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

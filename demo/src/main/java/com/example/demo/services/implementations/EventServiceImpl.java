@@ -1,7 +1,10 @@
-package com.example.demo.event;
+package com.example.demo.services.implementations;
 
-import com.example.demo.team.Team;
-import com.example.demo.team.TeamRepository;
+import com.example.demo.models.Event;
+import com.example.demo.repositories.EventRepository;
+import com.example.demo.models.Team;
+import com.example.demo.repositories.TeamRepository;
+import com.example.demo.services.EventService;
 import com.example.demo.util.Score;
 import com.example.demo.util.ScoreBoardOperations;
 import com.example.demo.util.Status;
@@ -16,19 +19,20 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class EventService {
+public class EventServiceImpl implements EventService {
 
-    private static final Logger logger = LogManager.getLogger(EventService.class);
+    private static final Logger logger = LogManager.getLogger(EventServiceImpl.class);
 
     private final EventRepository eventRepository;
     private final TeamRepository teamRepository;
 
     @Autowired
-    public EventService(EventRepository eventRepository, TeamRepository teamRepository) {
+    public EventServiceImpl(EventRepository eventRepository, TeamRepository teamRepository) {
         this.eventRepository = eventRepository;
         this.teamRepository = teamRepository;
     }
 
+    @Override
     public Event getEventById(Long eventId) {
         if (eventId == null) {
             logger.error("Invalid ID!");
@@ -41,6 +45,7 @@ public class EventService {
         return eventRepository.findById(eventId).get();
     }
 
+    @Override
     public Event getEventByTitle(String title) {
         if (title == null) {
             logger.error("Invalid title!");
@@ -53,6 +58,7 @@ public class EventService {
         return eventRepository.findEventByTitle(title);
     }
 
+    @Override
     public List<Event> getEventsByParticipatingTeam(Team team) {
         if (team == null) {
             logger.error("Invalid team!");
@@ -65,6 +71,7 @@ public class EventService {
         return eventRepository.findByParticipatingTeam(team);
     }
 
+    @Override
     public List<Event> getEventsByStartingDate(LocalDate startDate) {
         if (startDate == null) {
             logger.error("Invalid start date!");
@@ -76,6 +83,7 @@ public class EventService {
         return events;
     }
 
+    @Override
     public List<Event> getEventsByStatus(Status status) {
         if (status == null) {
             logger.error("Invalid status!");
@@ -87,6 +95,7 @@ public class EventService {
         return events;
     }
 
+    @Override
     public List<Event> getEvents() {
         List<Event> events = eventRepository.findAll();
         if (events.isEmpty())
@@ -94,26 +103,34 @@ public class EventService {
         return events;
     }
 
+    @Override
     public Event addNewEvent(Event event) {
         if (event == null) {
             logger.error("Invalid event!");
             throw new IllegalArgumentException("Invalid event!");
         }
-        if (eventRepository.existsById(event.getId())) {
-            logger.warn("Event with this ID already exists!");
-            return event;
+        if (event.getId() == null) {
+            eventRepository.save(event);
+            logger.info("Event successfully added!");
+        } else {
+            if (eventRepository.existsById(event.getId())) {
+                logger.warn("Event with this ID already exists!");
+            } else {
+                eventRepository.save(event);
+                logger.info("Event successfully added!");
+            }
         }
-        eventRepository.save(event);
-        logger.info("Event successfully added!");
         return event;
     }
 
+    @Override
     public void deleteEvent(Long eventId) {
         getEventById(eventId);
         eventRepository.deleteById(eventId);
         logger.info("Event deleted.");
     }
 
+    @Override
     @Transactional
     public Event updateEvent(Long eventId, Event event) {
         Event actual = eventRepository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Event couldn't be found!"));
@@ -135,6 +152,7 @@ public class EventService {
         return actual;
     }
 
+    @Override
     public void startEvent(Long eventId) {
         if (eventId == null) {
             logger.error("Invalid ID!");
@@ -149,10 +167,12 @@ public class EventService {
             logger.warn("Game is already started!");
             return;
         }
-        event.start();
+        event.setStatus(Status.ONGOING);
+        event.setScore(new Score());
         logger.info("Game started.");
     }
 
+    @Override
     public void stopTime(Long eventId) {
         if (eventId == null) {
             logger.error("Invalid ID!");
@@ -171,6 +191,7 @@ public class EventService {
         logger.info("Game paused.");
     }
 
+    @Override
     public void resumeTime(Long eventId) {
         if (eventId == null) {
             logger.error("Invalid ID!");
@@ -189,6 +210,7 @@ public class EventService {
         logger.info("Game unpaused.");
     }
 
+    @Override
     public void finishEvent(Long eventId) {
         if (eventId == null) {
             logger.error("Invalid ID!");
@@ -207,6 +229,7 @@ public class EventService {
         logger.info("Game finished.");
     }
 
+    @Override
     public void cancelEvent(Long eventId) {
         if (eventId == null) {
             logger.error("Invalid ID!");
@@ -225,6 +248,7 @@ public class EventService {
         logger.info("Game canceled.");
     }
 
+    @Override
     public Score getScore(Long eventId) {
         if (eventId == null) {
             logger.error("Invalid ID!");
@@ -248,6 +272,7 @@ public class EventService {
         return event.getScore();
     }
 
+    @Override
     public void updateScoreBoard(Long eventId, ScoreBoardOperations side_operation) {
         if (eventId == null) {
             logger.error("Invalid ID!");

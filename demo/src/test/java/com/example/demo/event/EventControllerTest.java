@@ -1,6 +1,9 @@
 package com.example.demo.event;
 
-import com.example.demo.team.Team;
+import com.example.demo.controllers.EventController;
+import com.example.demo.models.Event;
+import com.example.demo.services.implementations.EventServiceImpl;
+import com.example.demo.models.Team;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +38,7 @@ public class EventControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private EventService eventService;
+    private EventServiceImpl eventService;
 
     private Team barca, real;
     private Team milan, juventus;

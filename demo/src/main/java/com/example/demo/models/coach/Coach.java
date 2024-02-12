@@ -1,6 +1,6 @@
-package com.example.demo.appuser.coach;
+package com.example.demo.models.coach;
 
-import com.example.demo.appuser.AppUser;
+import com.example.demo.models.AppUser;
 import com.example.demo.util.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;

@@ -1,11 +1,11 @@
 package com.example.demo.user;
 
-import com.example.demo.appuser.AppUser;
-import com.example.demo.appuser.AppUserRepository;
-import com.example.demo.appuser.AppUserService;
-import com.example.demo.appuser.admin.Admin;
-import com.example.demo.appuser.coach.Coach;
-import com.example.demo.appuser.spectator.Spectator;
+import com.example.demo.models.AppUser;
+import com.example.demo.repositories.AppUserRepository;
+import com.example.demo.services.implementations.AppUserServiceImpl;
+import com.example.demo.models.admin.Admin;
+import com.example.demo.models.coach.Coach;
+import com.example.demo.models.spectator.Spectator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,12 +21,12 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AppUserServiceTest {
+public class AppUserServiceImplTest {
 
     @Mock
     private AppUserRepository userRepo;
     private PasswordEncoder passwordEncoder;
-    private AppUserService underTest;
+    private AppUserServiceImpl underTest;
 
     private Spectator spectator;
     private Coach coach;
@@ -36,7 +36,7 @@ public class AppUserServiceTest {
     void setUp() {
         // Given
         passwordEncoder = new BCryptPasswordEncoder();
-        underTest = new AppUserService(userRepo, passwordEncoder);
+        underTest = new AppUserServiceImpl(userRepo, passwordEncoder);
         spectator = new Spectator("EddieBrock", "venom");
         coach = new Coach("VinceLombardi", "CrazyFoot");
         admin = new Admin("AndyAnderson", "IHeardThat!");

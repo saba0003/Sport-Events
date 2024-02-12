@@ -1,5 +1,7 @@
-package com.example.demo.appuser;
+package com.example.demo.controllers;
 
+import com.example.demo.models.AppUser;
+import com.example.demo.services.implementations.AppUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,10 @@ import java.util.List;
 @RequestMapping(path = "api/v1/appusers")
 public class AppUserController {
 
-    private final AppUserService userService;
+    private final AppUserServiceImpl userService;
 
     @Autowired
-    public AppUserController(AppUserService userService) {
+    public AppUserController(AppUserServiceImpl userService) {
         this.userService = userService;
     }
 

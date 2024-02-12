@@ -1,8 +1,8 @@
-package com.example.demo.appuser;
+package com.example.demo.models;
 
-import com.example.demo.appuser.admin.Admin;
-import com.example.demo.appuser.coach.Coach;
-import com.example.demo.appuser.spectator.Spectator;
+import com.example.demo.models.admin.Admin;
+import com.example.demo.models.coach.Coach;
+import com.example.demo.models.spectator.Spectator;
 import com.example.demo.util.Role;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

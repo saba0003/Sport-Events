@@ -1,7 +1,9 @@
 package com.example.demo.event;
 
-import com.example.demo.team.Team;
-import com.example.demo.team.TeamRepository;
+import com.example.demo.models.Event;
+import com.example.demo.repositories.EventRepository;
+import com.example.demo.models.Team;
+import com.example.demo.repositories.TeamRepository;
 import com.example.demo.util.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +52,7 @@ public class EventRepositoryTest {
             return Optional.ofNullable((id == 1) ? barca : (id == 2) ? real : null);
         });
 
-        teamRepo.saveAll(List.of(barca, real));
+        List<Team> teams = teamRepo.saveAll(List.of(barca, real));
 
         // Fetch barca and real from the repository to ensure they are managed. Using them directly fails the test.
         Team team1 = teamRepo.findById(1L).orElse(null);
@@ -108,8 +110,7 @@ public class EventRepositoryTest {
     @Test
     void findByParticipatingTeamIsNullOrIncorrectTest() {
         // Given
-        Team napoli = new Team("Napoli", "Naples");
-        napoli.setId(3L);
+        Team napoli = new Team("Napoli", "Naples"); napoli.setId(3L);
 
         // When
         when(teamRepo.save(napoli)).thenReturn(napoli);

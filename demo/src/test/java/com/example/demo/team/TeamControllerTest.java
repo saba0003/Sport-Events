@@ -1,6 +1,9 @@
 package com.example.demo.team;
 
-import com.example.demo.player.Player;
+import com.example.demo.controllers.TeamController;
+import com.example.demo.models.Team;
+import com.example.demo.models.Player;
+import com.example.demo.services.implementations.TeamServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +38,7 @@ public class TeamControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private TeamService teamService;
+    private TeamServiceImpl teamService;
 
     private Team napoli, barca, real;
     private Player kvara, osimhen, politano;
@@ -121,7 +124,7 @@ public class TeamControllerTest {
                 // List of players property in Team class is json ignored.
                 // That's what fails me here and potentially
                 // that's what will fail me in the update test as well.
-//                .andExpect(jsonPath("$.numOfPlayers", CoreMatchers.is(napoli.getNumOfPlayers())))
+                .andExpect(jsonPath("$.numOfPlayers", CoreMatchers.is(napoli.getNumOfPlayers())))
                 .andDo(print());
     }
 
@@ -162,7 +165,7 @@ public class TeamControllerTest {
                 .andExpect(jsonPath("$.name", CoreMatchers.is(napoli.getName())))
                 .andExpect(jsonPath("$.city", CoreMatchers.is(napoli.getCity())))
                 // I was right. Now, how resolve this.
-//                .andExpect(jsonPath("$.numOfPlayers", CoreMatchers.is(napoli.getNumOfPlayers())))
+                .andExpect(jsonPath("$.numOfPlayers", CoreMatchers.is(napoli.getNumOfPlayers())))
                 .andDo(print());
     }
 }

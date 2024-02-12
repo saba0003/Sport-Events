@@ -1,8 +1,8 @@
 package com.example.demo.security.authentication;
 
-import com.example.demo.appuser.AppUser;
-import com.example.demo.appuser.AppUserRepository;
-import com.example.demo.appuser.spectator.Spectator;
+import com.example.demo.models.AppUser;
+import com.example.demo.repositories.AppUserRepository;
+import com.example.demo.models.spectator.Spectator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

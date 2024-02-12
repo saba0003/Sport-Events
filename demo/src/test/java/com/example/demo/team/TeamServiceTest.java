@@ -1,6 +1,9 @@
 package com.example.demo.team;
 
-import com.example.demo.player.Player;
+import com.example.demo.models.Team;
+import com.example.demo.models.Player;
+import com.example.demo.repositories.TeamRepository;
+import com.example.demo.services.implementations.TeamServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,13 +23,13 @@ public class TeamServiceTest {
 
     @Mock
     private TeamRepository teamRepo;
-    private TeamService underTest;
+    private TeamServiceImpl underTest;
 
     private Team napoli;
 
     @BeforeEach
     void setUp() {
-        underTest = new TeamService(teamRepo);
+        underTest = new TeamServiceImpl(teamRepo);
         // Given
         napoli = new Team("Napoli", "Naples");
     }

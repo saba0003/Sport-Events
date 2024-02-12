@@ -1,7 +1,7 @@
 package com.example.demo;
 
-import com.example.demo.player.Player;
-import com.example.demo.player.PlayerRepository;
+import com.example.demo.models.Player;
+import com.example.demo.repositories.PlayerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

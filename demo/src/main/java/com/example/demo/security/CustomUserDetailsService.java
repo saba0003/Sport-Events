@@ -1,7 +1,7 @@
 package com.example.demo.security;
 
-import com.example.demo.appuser.AppUser;
-import com.example.demo.appuser.AppUserRepository;
+import com.example.demo.models.AppUser;
+import com.example.demo.repositories.AppUserRepository;
 import com.example.demo.util.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,5 +1,7 @@
-package com.example.demo.player;
+package com.example.demo.controllers;
 
+import com.example.demo.models.Player;
+import com.example.demo.services.implementations.PlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,10 @@ import java.util.List;
 @RequestMapping(path = "api/v1/players")
 public class PlayerController {
 
-    private final PlayerService playerService;
+    private final PlayerServiceImpl playerService;
 
     @Autowired
-    public PlayerController(PlayerService playerService) {
+    public PlayerController(PlayerServiceImpl playerService) {
         this.playerService = playerService;
     }
 

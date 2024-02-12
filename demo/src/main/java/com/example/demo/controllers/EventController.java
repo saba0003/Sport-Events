@@ -1,5 +1,7 @@
-package com.example.demo.event;
+package com.example.demo.controllers;
 
+import com.example.demo.models.Event;
+import com.example.demo.services.implementations.EventServiceImpl;
 import com.example.demo.util.Score;
 import com.example.demo.util.ScoreBoardOperations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,10 @@ import java.util.List;
 @RequestMapping(path = "api/v1/events")
 public class EventController {
 
-    private final EventService eventService;
+    private final EventServiceImpl eventService;
 
     @Autowired
-    public EventController(EventService eventService) {
+    public EventController(EventServiceImpl eventService) {
         this.eventService = eventService;
     }
 
